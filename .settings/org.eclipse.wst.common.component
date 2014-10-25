@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="despacho">
+    <wb-module deploy-name="icr_com_nco">
         <wb-resource deploy-path="/" source-path="/ejbModule" tag="defaultRootSource"/>
-        <property name="java-output-path" value="/despacho/build/classes"/>
+        <property name="java-output-path" value="/icr_des_nco/build/classes"/>
     </wb-module>
 </project-modules>
