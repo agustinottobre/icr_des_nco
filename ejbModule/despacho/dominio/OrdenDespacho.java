@@ -5,10 +5,10 @@ import java.util.List;
 
 public class OrdenDespacho {
 
-	private long id;
-	private Portal portal;
-	private String estado;
-	private Date fechaCreacion;
-	private Date fechaEntrega;
-	private List<SolicitudArticulo> articulosSolicitados;
+	private int idOrdenDespacho;
+	private int idOrdenventa;
+	private String estadoOrden;
+	private Date fechaRecepcion;
+	private List<itemOrdenDespacho> items;
+	
 }
