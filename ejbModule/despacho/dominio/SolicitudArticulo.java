@@ -1,12 +1,13 @@
 package despacho.dominio;
 
 import java.util.Date;
+import java.util.List;
 
 public class SolicitudArticulo {
-
-	//manyToOne
-	private Articulo articuloSolicitado;
-	private Deposito depostio;
-	private String estado;
+	
+	private int idSolicitud;
+	private String estadoSolicitud;
+	private int idDepostio;
+	private List<ItemSolicitudArticulo> items;
 
 }

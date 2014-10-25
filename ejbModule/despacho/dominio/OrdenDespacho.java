@@ -6,7 +6,7 @@ import java.util.List;
 public class OrdenDespacho {
 
 	private int idOrdenDespacho;
-	private int idOrdenventa;
+	private OrdenVenta ordenVenta;
 	private String estadoOrden;
 	private Date fechaRecepcion;
 	private List<itemOrdenDespacho> items;
