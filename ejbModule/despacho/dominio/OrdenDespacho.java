@@ -31,6 +31,6 @@ public class OrdenDespacho {
 	
 	@OneToMany (cascade = CascadeType.ALL)
 	@JoinColumn(name = "idOrdenDespacho")
-	private List<itemOrdenDespacho> items;
+	private List<ItemOrdenDespacho> items;
 	
 }

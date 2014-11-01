@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity(name = "itemsOrdenDespacho")
-public class itemOrdenDespacho {
+public class ItemOrdenDespacho {
 
 	@Id
 	//@GeneratedValue (strategy = GenerationType.AUTO)

@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import dto.ArticuloDTO;
+
 @Entity(name = "Articulos")
 public class Articulo {
 	
@@ -23,6 +25,12 @@ public class Articulo {
 	@Column (columnDefinition="nvarchar")
 	private String modelo;
 	
-	
+	public ArticuloDTO getDTO() {
+		ArticuloDTO articuloDTO = new ArticuloDTO();
+		
+		
+		
+		return articuloDTO;
+	}
 	
 }
