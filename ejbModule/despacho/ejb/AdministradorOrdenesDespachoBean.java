@@ -19,10 +19,8 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
     public AdministradorOrdenesDespachoBean() {}
 
 	@Override
-	public OrdenDespachoDTO altaOrdenDespacho(String codigo_despacho,
-			String codigo_venta, String id_portal, String id_monitoreo,
-			List<String[][]> items) {
-		// TODO Auto-generated method stub
+	public OrdenDespachoDTO altaOrdenDespacho(OrdenDespachoDTO ordenDespachoDTO) {
+		System.out.println("## altaOrdenDespacho SIN IMPLEMENTACION" );
 		return null;
 	}
     
