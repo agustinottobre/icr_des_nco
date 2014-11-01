@@ -32,6 +32,7 @@ public class AdministradorArticulosBean implements AdministradorArticulos{
     	return "Test EJB OK !";
     }
 
+
     private void guardarArticulo(Articulo articulo){
 		em.persist(articulo);
 	}
