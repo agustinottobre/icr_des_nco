@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import dto.OrdenVentaDTO;
+import dto.PortalDTO;
+
 @Entity(name = "Portales")
 public class Portal {
 	@Id
@@ -28,4 +31,12 @@ public class Portal {
 		this.descripcion = descripcion;
 	}
 	
+	public PortalDTO getDTO() {
+		PortalDTO  portalDTO = new  PortalDTO();
+
+		portalDTO.setDescripcion(this.getDescripcion());
+		portalDTO.setIdPortal(this.getIdPortal());
+		 
+		 return portalDTO;
+	}
 }
