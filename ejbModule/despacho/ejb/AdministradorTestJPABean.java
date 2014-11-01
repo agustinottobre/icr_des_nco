@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import despacho.dominio.Portal;
+import despacho.ejb.interfaces.remotas.AdministradorTestJPA;
 
 @Stateless
 public class AdministradorTestJPABean implements AdministradorTestJPA{
@@ -14,10 +15,13 @@ public class AdministradorTestJPABean implements AdministradorTestJPA{
     private EntityManager entityManager;
     
 	@Override
-	public void persistirPortal(Portal portal) {
+	public void persistirPortal(String descripcionPortal) {
 		// TODO Auto-generated method stub
+		Portal portal = new Portal();
+		portal.setDescripcion(descripcionPortal);
 		entityManager.persist(portal);
-		entityManager.close();
+		entityManager.flush();
+//		entityManager.close();
 	}
 
 }
