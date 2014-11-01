@@ -6,6 +6,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import despacho.ejb.interfaces.remotas.AdministradorOrdenesDespacho;
+import dto.OrdenDespachoDTO;
 
 /**
  * Session Bean implementation class AdministradorOrdenesDespachoBean
@@ -18,7 +19,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
     public AdministradorOrdenesDespachoBean() {}
 
 	@Override
-	public String altaOrdenDespacho(String codigo_despacho,
+	public OrdenDespachoDTO altaOrdenDespacho(String codigo_despacho,
 			String codigo_venta, String id_portal, String id_monitoreo,
 			List<String[][]> items) {
 		// TODO Auto-generated method stub
