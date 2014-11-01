@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
+import despacho.dominio.OrdenDespacho;
 import despacho.ejb.interfaces.remotas.AdministradorOrdenesDespacho;
 import dto.OrdenDespachoDTO;
 
@@ -16,12 +19,13 @@ import dto.OrdenDespachoDTO;
 public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDespacho {
 
 
+
     public AdministradorOrdenesDespachoBean() {}
 
+
+
 	@Override
-	public OrdenDespachoDTO altaOrdenDespacho(String codigo_despacho,
-			String codigo_venta, String id_portal, String id_monitoreo,
-			List<String[][]> items) {
+	public OrdenDespachoDTO altaOrdenDespacho(OrdenDespachoDTO ordenDespachoDTO) {
 		// TODO Auto-generated method stub
 		return null;
 	}
