@@ -51,20 +51,5 @@ public class AdministradorArticulosBean implements AdministradorArticulos{
 	public ArticuloDTO BuscarArticulo(int idArticulo) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-/*
-	@Override
-	public ArticuloDTO altaArticulo(String codigo, String nombre,
-			String idModulo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArticuloDTO BuscarArticulo(int idArticulo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-*/
+	}	
 }
