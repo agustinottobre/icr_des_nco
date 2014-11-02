@@ -58,6 +58,7 @@ public class AdministradorSolicitudesArticuloBean implements AdministradorSolici
 		solicitudArticulo.setItems(items);
 		
 		em.persist(solicitudArticulo);
+
 		
 //		FALTA VERIFICAR SI SE HACE BIEN EL ALTA Y DEVOLVER EL DTO EN CADA CASO
 		return solicitudArticuloDTO;

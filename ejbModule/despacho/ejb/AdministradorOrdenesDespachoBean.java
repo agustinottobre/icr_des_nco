@@ -40,10 +40,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
     @PersistenceContext(unitName = "JPADB")
     private EntityManager em;
 
-
     public AdministradorOrdenesDespachoBean() {}
-
-
 
 	@Override
 	public OrdenDespachoDTO altaOrdenDespacho(OrdenDespachoDTO ordenDespachoDTO) {
@@ -113,9 +110,10 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	public OrdenDespachoDTO buscarOrdenDespacho(String idOrdenDespacho) {
 		// TODO Auto-generated method stub
 		
-		Query q = em.createQuery("SELECT FROM OrdenesDespacho o WHERE o.idOrdenDespacho = :id");
-				q.setParameter("id", idOrdenDespacho);
-				
+		int id = Integer.parseInt(idOrdenDespacho);
+		Query q = em.createQuery("SELECT o FROM OrdenesDespacho o WHERE o.idOrdenDespacho = :p1");
+				q.setParameter("p1", id);
+
 		OrdenDespacho ordenDespacho = (OrdenDespacho)q.getSingleResult();
 	
 		return ordenDespacho.getDTO();
