@@ -13,3 +13,5 @@ hs_err_pid*
 pom.xml
 target/
 build/
+/.classpath
+/.gitignore
