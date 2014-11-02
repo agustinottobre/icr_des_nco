@@ -25,6 +25,8 @@ public class Articulo {
 	@Column (columnDefinition="nvarchar")
 	private String modelo;
 	
+	private Integer idDeposito;
+	
 	public int getIdArticulo() {
 		return idArticulo;
 	}
@@ -66,5 +68,13 @@ public class Articulo {
 		articuloDTO.setModelo(this.getModelo());
 	
 		return articuloDTO;
+	}
+
+	public Integer getIdDeposito() {
+		return idDeposito;
+	}
+
+	public void setIdDeposito(Integer idDeposito) {
+		this.idDeposito = idDeposito;
 	}	
 }

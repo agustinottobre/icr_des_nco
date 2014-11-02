@@ -1,5 +1,7 @@
 package despacho.ejb;
 
+import java.util.List;
+
 import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import javax.ejb.Stateless;
@@ -36,17 +38,29 @@ public class AdministradorArticulosBean implements AdministradorArticulos{
 	}
     
 	@Override
-	public ArticuloDTO altaArticulo(String codigo, String nombre, String idModulo) {
+	public ArticuloDTO altaArticulo(ArticuloDTO articuloDTO) {
 		// TODO Auto-generated method stub
 		Articulo articulo = new Articulo();
-		articulo.setIdArticulo(Integer.parseInt(codigo));
-		articulo.setDescripcion(nombre);
+		articulo.setIdArticulo(articuloDTO.getIdArticulo());
+		articulo.setDescripcion(articuloDTO.getDescripcion());
 		this.guardarArticulo(articulo);
 		return null;
 	}
 
 	@Override
 	public ArticuloDTO BuscarArticulo(int idArticulo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArticuloDTO actualizarArticulo(ArticuloDTO articulo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ArticuloDTO> ArticulosPorDeposito(int idDeposito) {
 		// TODO Auto-generated method stub
 		return null;
 	}	
