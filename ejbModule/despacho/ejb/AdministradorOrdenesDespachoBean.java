@@ -46,49 +46,63 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	@Override
 	public OrdenDespachoDTO altaOrdenDespacho(OrdenDespachoDTO ordenDespachoDTO) {
 		
-		Portal portal = new Portal();
-		portal.setIdPortal(ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal());
-		portal.setDescripcion(ordenDespachoDTO.getOrdenVenta().getPortal().getDescripcion());
-	
-		OrdenVenta ordenVenta = new OrdenVenta();
-		ordenVenta.setIdOrdenVenta(ordenDespachoDTO.getOrdenVenta().getIdOrdenVenta());
-		ordenVenta.setPortal(portal);
+		//Buscar el objeto en la base de datos.
+		OrdenDespachoDTO ordenBaseDatos;
+		ordenBaseDatos = this.buscarOrdenDespacho(String.valueOf(ordenDespachoDTO.getIdOrdenDespacho()));
 		
-		OrdenDespacho ordenDespacho = new OrdenDespacho();
-		ordenDespacho.setIdOrdenDespacho(ordenDespachoDTO.getIdOrdenDespacho());
-		ordenDespacho.setEstadoOrden(ordenDespachoDTO.getEstadoOrden());
-		DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-		try {
-			ordenDespacho.setFechaRecepcion(df.parse(ordenDespachoDTO.getFechaRecepcion()));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		//Si la orden existe en la Base de Datos muestro un mensaje
+		if (ordenBaseDatos != null) {
+			System.out.println("Ya existe una Orden de Despacho con el mismo ID");
+			return null;
+			
+		} else {
+			System.out.println("Se da de alta una Orden de Despacho con el ID: " + String.valueOf(ordenDespachoDTO.getIdOrdenDespacho()));
 		
-		ItemOrdenDespacho itemOD;
-		List<ItemOrdenDespacho> items = new ArrayList<ItemOrdenDespacho>();
-		Articulo articulo;
-		for (ItemOrdenDespachoDTO item : ordenDespachoDTO.getItems())
-		{
-			
-			articulo = new Articulo();
-			articulo.setIdArticulo(item.getArticulo().getIdArticulo());
-			
-			itemOD = new ItemOrdenDespacho();
-			itemOD.setArticulo(articulo);
-			itemOD.setCantidad(item.getCantidad());
-			itemOD.setEstadoItems(item.getEstadoItems());
-			
-			items.add(itemOD);
-		}
-		ordenDespacho.setItems(items);
+			Portal portal = new Portal();
+			portal.setIdPortal(ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal());
+			portal.setDescripcion(ordenDespachoDTO.getOrdenVenta().getPortal().getDescripcion());
 		
-		em.persist(ordenDespacho);
+			OrdenVenta ordenVenta = new OrdenVenta();
+			ordenVenta.setIdOrdenVenta(ordenDespachoDTO.getOrdenVenta().getIdOrdenVenta());
+			ordenVenta.setPortal(portal);
+			
+			OrdenDespacho ordenDespacho = new OrdenDespacho();
+			ordenDespacho.setIdOrdenDespacho(ordenDespachoDTO.getIdOrdenDespacho());
+			ordenDespacho.setEstadoOrden(ordenDespachoDTO.getEstadoOrden());
+			DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+			try {
+				ordenDespacho.setFechaRecepcion(df.parse(ordenDespachoDTO.getFechaRecepcion()));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-//		FALTA VERIFICAR SI SE HACE BIEN EL ALTA Y DEVOLVER EL DTO EN CADA CASO
+			ItemOrdenDespacho itemOD;
+			List<ItemOrdenDespacho> items = new ArrayList<ItemOrdenDespacho>();
+			Articulo articulo;
+			for (ItemOrdenDespachoDTO item : ordenDespachoDTO.getItems())
+			{
+				
+				articulo = new Articulo();
+				articulo.setIdArticulo(item.getArticulo().getIdArticulo());
+				
+				itemOD = new ItemOrdenDespacho();
+				itemOD.setArticulo(articulo);
+				itemOD.setCantidad(item.getCantidad());
+				itemOD.setEstadoItems(item.getEstadoItems());
+				
+				items.add(itemOD);
+			}
+			ordenDespacho.setItems(items);
+			
+			em.persist(ordenDespacho);
+		
+//			FALTA VERIFICAR SI SE HACE BIEN EL ALTA Y DEVOLVER lo que corresponda
 
-		return ordenDespachoDTO;
+			return ordenDespachoDTO;	
+		
+		}	
+		
 	}
 
 
@@ -104,6 +118,8 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	
 		return ordenDespacho.getDTO();
 	}
+	
+	
 	
 	
 	
