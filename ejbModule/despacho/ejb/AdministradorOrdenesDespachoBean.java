@@ -23,8 +23,8 @@ import despacho.dominio.Portal;
 import despacho.ejb.interfaces.remotas.AdministradorOrdenesDespacho;
 import dto.ItemOrdenDespachoDTO;
 
-//import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBean;
-//import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBeanService;
+import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBean;
+import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBeanService;
 
 import dto.ItemSolicitudArticuloDTO;
 import dto.OrdenDespachoDTO;
@@ -163,10 +163,6 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 		return solicitudesGeneradas;
 	}
 	
-	
-	
-	
-	/*@Override
 	public String notificarEntregaDespacho (int idOrdenDespacho){
         System.out.println("***********************");
         System.out.println("Creando Cliente Web Service para Portal...");
@@ -177,6 +173,6 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
         String respuesta = port1.notificarEntregaDespacho(idOrdenDespacho);
         System.out.println("Server said: " + respuesta);
 		return respuesta;
-	}*/
+	}
     
 }
