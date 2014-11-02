@@ -27,6 +27,7 @@ import dto.ItemOrdenDespachoDTO;
 //import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBeanService;
 
 import dto.OrdenDespachoDTO;
+import dto.SolicitudArticuloDTO;
 
 /**
  * Session Bean implementation class AdministradorOrdenesDespachoBean
@@ -117,6 +118,35 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 		OrdenDespacho ordenDespacho = (OrdenDespacho)q.getSingleResult();
 	
 		return ordenDespacho.getDTO();
+	}
+
+
+
+	@Override
+	public List<SolicitudArticuloDTO> generarSolicitudArticuloPorDeposito(OrdenDespachoDTO ordenDespachoDTO) {
+		// TODO Auto-generated method stub
+		List<SolicitudArticuloDTO> solicitudesGeneradas = new ArrayList<SolicitudArticuloDTO>();
+		
+		ItemOrdenDespacho itemOD;
+		SolicitudArticuloDTO solicitudGenerada = new SolicitudArticuloDTO();
+		for (ItemOrdenDespachoDTO item : ordenDespachoDTO.getItems())
+		{
+			
+			
+			
+			articulo.setIdArticulo(item.getArticulo().getIdArticulo());
+			
+			itemOD = new ItemOrdenDespacho();
+			itemOD.setArticulo(articulo);
+			itemOD.setCantidad(item.getCantidad());
+			itemOD.setEstadoItems(item.getEstadoItems());
+			
+			items.add(itemOD);
+		}
+		
+		
+		
+		return null;
 	}
 	
 	
