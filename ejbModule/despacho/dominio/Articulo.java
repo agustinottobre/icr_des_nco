@@ -26,6 +26,7 @@ public class Articulo {
 	private String modelo;
 	
 	private int idDeposito;
+
 	
 	public int getIdArticulo() {
 		return idArticulo;

@@ -26,6 +26,7 @@ import dto.ItemOrdenDespachoDTO;
 //import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBean;
 //import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBeanService;
 
+import dto.ItemSolicitudArticuloDTO;
 import dto.OrdenDespachoDTO;
 import dto.SolicitudArticuloDTO;
 
@@ -125,30 +126,44 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	@Override
 	public List<SolicitudArticuloDTO> generarSolicitudArticuloPorDeposito(OrdenDespachoDTO ordenDespachoDTO) {
 		// TODO Auto-generated method stub
+		
+		OrdenDespachoDTO ordenDespachoDTOAux = ordenDespachoDTO;
 		List<SolicitudArticuloDTO> solicitudesGeneradas = new ArrayList<SolicitudArticuloDTO>();
 		
-		ItemOrdenDespacho itemOD;
-		SolicitudArticuloDTO solicitudGenerada = new SolicitudArticuloDTO();
-		for (ItemOrdenDespachoDTO item : ordenDespachoDTO.getItems())
+		SolicitudArticuloDTO solicitudGenerada;
+		int deposito1, deposito2;
+		for (ItemOrdenDespachoDTO item1 : ordenDespachoDTOAux.getItems())
 		{
+			Boolean procesado = false;
+			deposito1 = item1.getArticulo().getIdDeposito();
+			
+			solicitudGenerada = new SolicitudArticuloDTO();
+			solicitudGenerada.setEstadoSolicitud("Nueva");
+			solicitudGenerada.setIdDepostio(deposito1);
 			
 			
+			for (ItemOrdenDespachoDTO item2 : ordenDespachoDTOAux.getItems())
+			{			
+				deposito2 = item2.getArticulo().getIdDeposito();
+				ItemSolicitudArticuloDTO itemSolicitud;
+				if (deposito1 == deposito2) {
+					procesado = true;
+					itemSolicitud = new ItemSolicitudArticuloDTO();
+					itemSolicitud.setArticulo(item2.getArticulo());
+					itemSolicitud.setCantidad(item2.getCantidad());
+					solicitudGenerada.getItems().add(itemSolicitud);
+					ordenDespachoDTOAux.getItems().remove(item2);	
+				}		
+			}
 			
-			articulo.setIdArticulo(item.getArticulo().getIdArticulo());
+			if (procesado) {
+				solicitudesGeneradas.add(solicitudGenerada);
+			}
 			
-			itemOD = new ItemOrdenDespacho();
-			itemOD.setArticulo(articulo);
-			itemOD.setCantidad(item.getCantidad());
-			itemOD.setEstadoItems(item.getEstadoItems());
-			
-			items.add(itemOD);
 		}
-		
-		
-		
-		return null;
+			
+		return solicitudesGeneradas;
 	}
-	
 	
 	
 	
