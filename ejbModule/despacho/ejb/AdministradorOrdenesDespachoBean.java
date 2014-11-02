@@ -13,6 +13,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import despacho.dominio.Articulo;
 import despacho.dominio.ItemOrdenDespacho;
@@ -20,7 +21,6 @@ import despacho.dominio.OrdenDespacho;
 import despacho.dominio.OrdenVenta;
 import despacho.dominio.Portal;
 import despacho.ejb.interfaces.remotas.AdministradorOrdenesDespacho;
-
 import dto.ItemOrdenDespachoDTO;
 
 //import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBean;
@@ -85,13 +85,27 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 		ordenDespacho.setItems(items);
 		
 		em.persist(ordenDespacho);
-		
-		System.out.println("## altaOrdenDespacho SIN IMPLEMENTACION" );
 
-//		this.notificarEntregaDespacho(777);
+//		FALTA VERIFICAR SI SE HACE BIEN EL ALTA Y DEVOLVER EL DTO EN CADA CASO
 
-		return null;
+		return ordenDespachoDTO;
 	}
+
+
+
+	@Override
+	public OrdenDespachoDTO buscarOrdenDespacho(String idOrdenDespacho) {
+		// TODO Auto-generated method stub
+		
+		Query q = em.createQuery("SELECT FROM OrdenesDespacho o WHERE o.idOrdenDespacho = :id");
+				q.setParameter("id", idOrdenDespacho);
+				
+		OrdenDespacho ordenDespacho = (OrdenDespacho)q.getSingleResult();
+	
+		return ordenDespacho.getDTO();
+	}
+	
+	
 	
 	/*@Override
 	public String notificarEntregaDespacho (int idOrdenDespacho){
