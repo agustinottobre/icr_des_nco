@@ -1,32 +1,47 @@
 package despacho.dominio;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 import dto.ItemOrdenDespachoDTO;
 import dto.OrdenDespachoDTO;
 
-@Entity(name = "itemsOrdenDespacho")
-public class ItemOrdenDespacho {
+@Entity
+@Table(name = "itemsOrdenDespacho")
+public class ItemOrdenDespacho implements Serializable{
 
 	@Id
-	//@GeneratedValue (strategy = GenerationType.AUTO)
-	
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 		private int idItemOD;
 	
-	@OneToOne (cascade = CascadeType.ALL)
-	@PrimaryKeyJoinColumn
+//	 @ManyToOne(optional=false)
+//     @JoinColumn(name="idOrdenDespacho",referencedColumnName="idOrdenDespacho")
+//		private OrdenDespacho ordenDespacho;
+	private int idOrdenDespacho;
+	
+	@OneToOne (fetch=FetchType.EAGER)
+	@JoinColumn(name = "idArticulo")
 		private Articulo articulo;
 		private int cantidad;
 		
 		@Column (columnDefinition="nvarchar")
 		private String estadoItems;
+	
+		public ItemOrdenDespacho() {
+			super();
+		}
 
 		public int getIdItemOD() {
 			return idItemOD;
@@ -67,8 +82,17 @@ public class ItemOrdenDespacho {
 			itemOrdenDespachoDTO.setCantidad(this.getCantidad());
 			itemOrdenDespachoDTO.setEstadoItems(this.getEstadoItems());
 			itemOrdenDespachoDTO.setIdItemOD(this.getIdItemOD());
+			itemOrdenDespachoDTO.setIdOrdenDespacho(this.getIdOrdenDespacho());
 			
 			return itemOrdenDespachoDTO;
+		}
+
+		public int getIdOrdenDespacho() {
+			return idOrdenDespacho;
+		}
+
+		public void setIdOrdenDespacho(int idOrdenDespacho) {
+			this.idOrdenDespacho = idOrdenDespacho;
 		}	
 		
 }

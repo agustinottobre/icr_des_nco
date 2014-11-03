@@ -1,26 +1,32 @@
 package despacho.dominio;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 import dto.ItemOrdenDespachoDTO;
 import dto.ItemSolicitudArticuloDTO;
 
-@Entity(name = "ItemsSolicitudArticulo")
-public class ItemSolicitudArticulo {
+@Entity
+@Table(name = "ItemsSolicitudArticulo")
+public class ItemSolicitudArticulo implements Serializable{
 
 	@Id
-	//@GeneratedValue (strategy = GenerationType.AUTO)
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private int idItemSA;
 	
-	@OneToOne (cascade = CascadeType.ALL)
-	@PrimaryKeyJoinColumn
+	@OneToOne (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@JoinColumn(name = "idArticulo")
 	private Articulo articulo;
 	
 	private int cantidad;

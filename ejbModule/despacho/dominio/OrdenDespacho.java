@@ -1,41 +1,36 @@
 package despacho.dominio;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 
 import dto.HistorialOrdenDespachoDTO;
 import dto.ItemOrdenDespachoDTO;
 import dto.OrdenDespachoDTO;
 
-@Entity(name = "OrdenesDespacho")
-public class OrdenDespacho {
+@Entity
+@Table(name = "OrdenesDespacho")
+public class OrdenDespacho implements Serializable{
 
 	@Id
 	//@GeneratedValue (strategy = GenerationType.AUTO)
 	private int idOrdenDespacho;
 	
-	@OneToOne (cascade = CascadeType.ALL)
-	@PrimaryKeyJoinColumn
+	@OneToOne (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@JoinColumn(name = "idOrdenVenta")
 	private OrdenVenta ordenVenta;
 	
 	@Column (columnDefinition="nvarchar")
 	private String estadoOrden;
 	private Date fechaRecepcion;
 	
-	@OneToMany (cascade = CascadeType.ALL)
+	@OneToMany (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name = "idOrdenDespacho")
-	private List<ItemOrdenDespacho> items;
+//	@OneToMany(mappedBy="ordenDespacho", targetEntity=ItemOrdenDespacho.class, cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	private Set<ItemOrdenDespacho> items;
 
 	public int getIdOrdenDespacho() {
 		return idOrdenDespacho;
@@ -69,11 +64,11 @@ public class OrdenDespacho {
 		this.fechaRecepcion = fechaRecepcion;
 	}
 
-	public List<ItemOrdenDespacho> getItems() {
+	public Set<ItemOrdenDespacho> getItems() {
 		return items;
 	}
 
-	public void setItems(List<ItemOrdenDespacho> items) {
+	public void setItems(Set<ItemOrdenDespacho> items) {
 		this.items = items;
 	}
 	
@@ -81,6 +76,9 @@ public class OrdenDespacho {
 		OrdenDespachoDTO ordenDespachoDTO = new OrdenDespachoDTO();
 		
 		ordenDespachoDTO.setEstadoOrden(this.getEstadoOrden());
+		if (this.getFechaRecepcion() == null) {
+			this.setFechaRecepcion(new Date());
+		}
 		ordenDespachoDTO.setFechaRecepcion(this.getFechaRecepcion().toString());
 		ordenDespachoDTO.setIdOrdenDespacho(this.getIdOrdenDespacho());
 		ordenDespachoDTO.setOrdenVenta(this.getOrdenVenta().getDTO());

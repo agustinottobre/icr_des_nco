@@ -6,11 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import dto.OrdenVentaDTO;
 import dto.PortalDTO;
 
-@Entity(name = "Portales")
+@Entity
+@Table(name = "Portales")
 public class Portal {
 	@Id
 	//@GeneratedValue (strategy = GenerationType.AUTO)

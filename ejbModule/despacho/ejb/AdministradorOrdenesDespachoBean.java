@@ -4,14 +4,18 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Formatter;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -22,10 +26,8 @@ import despacho.dominio.OrdenVenta;
 import despacho.dominio.Portal;
 import despacho.ejb.interfaces.remotas.AdministradorOrdenesDespacho;
 import dto.ItemOrdenDespachoDTO;
-
 import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBean;
 import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBeanService;
-
 import dto.ItemSolicitudArticuloDTO;
 import dto.OrdenDespachoDTO;
 import dto.SolicitudArticuloDTO;
@@ -45,17 +47,16 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	@Override
 	public OrdenDespachoDTO altaOrdenDespacho(OrdenDespachoDTO ordenDespachoDTO) {
 		
-		//Buscar el objeto en la base de datos.
-		OrdenDespachoDTO ordenBaseDatos;
-		ordenBaseDatos = this.buscarOrdenDespacho(String.valueOf(ordenDespachoDTO.getIdOrdenDespacho()));
-		
-		//Si la orden existe en la Base de Datos muestro un mensaje
+		//Busco la OD en la BD, si ya existe una con el mismo ID, no la persiste 
+		OrdenDespacho ordenBaseDatos;
+		ordenBaseDatos = em.find(OrdenDespacho.class, ordenDespachoDTO.getIdOrdenDespacho());
 		if (ordenBaseDatos != null) {
-			System.out.println("Ya existe una Orden de Despacho con el mismo ID");
+			System.out.println("### Ya hay una orden de Despacho con ID: " + ordenDespachoDTO.getIdOrdenDespacho());
 			return null;
-			
+		
+		//Si la OD NO existe en la Base de Datos, PERSISTO
 		} else {
-			System.out.println("Se da de alta una Orden de Despacho con el ID: " + String.valueOf(ordenDespachoDTO.getIdOrdenDespacho()));
+			System.out.println("### Se da de alta una Orden de Despacho con el ID: " + String.valueOf(ordenDespachoDTO.getIdOrdenDespacho()));
 		
 			Portal portal = new Portal();
 			portal.setIdPortal(ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal());
@@ -67,17 +68,12 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			
 			OrdenDespacho ordenDespacho = new OrdenDespacho();
 			ordenDespacho.setIdOrdenDespacho(ordenDespachoDTO.getIdOrdenDespacho());
-			ordenDespacho.setEstadoOrden(ordenDespachoDTO.getEstadoOrden());
-			DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-			try {
-				ordenDespacho.setFechaRecepcion(df.parse(ordenDespachoDTO.getFechaRecepcion()));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			ordenDespacho.setEstadoOrden("Nueva");
+			ordenDespacho.setFechaRecepcion(new Date());
+			ordenDespacho.setOrdenVenta(ordenVenta);
+			
 			ItemOrdenDespacho itemOD;
-			List<ItemOrdenDespacho> items = new ArrayList<ItemOrdenDespacho>();
+			Set<ItemOrdenDespacho> items = new HashSet<ItemOrdenDespacho>();
 			Articulo articulo;
 			for (ItemOrdenDespachoDTO item : ordenDespachoDTO.getItems())
 			{
@@ -86,17 +82,17 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 				articulo.setIdArticulo(item.getArticulo().getIdArticulo());
 				
 				itemOD = new ItemOrdenDespacho();
+				itemOD.setIdOrdenDespacho(item.getIdOrdenDespacho());
 				itemOD.setArticulo(articulo);
 				itemOD.setCantidad(item.getCantidad());
 				itemOD.setEstadoItems(item.getEstadoItems());
+				
 				
 				items.add(itemOD);
 			}
 			ordenDespacho.setItems(items);
 			
-			em.persist(ordenDespacho);
-		
-//			FALTA VERIFICAR SI SE HACE BIEN EL ALTA Y DEVOLVER lo que corresponda
+			em.merge(ordenDespacho);
 
 			return ordenDespachoDTO;	
 		
@@ -107,15 +103,18 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 
 
 	@Override
-	public OrdenDespachoDTO buscarOrdenDespacho(String idOrdenDespacho) {
-		// TODO Auto-generated method stub
+	public OrdenDespachoDTO buscarOrdenDespacho(int idOrdenDespacho) {
 		
-		int id = Integer.parseInt(idOrdenDespacho);
-		Query q = em.createQuery("SELECT o FROM OrdenesDespacho o WHERE o.idOrdenDespacho = :p1");
-				q.setParameter("p1", id);
-
-		OrdenDespacho ordenDespacho = (OrdenDespacho)q.getSingleResult();
-	
+		OrdenDespacho ordenDespacho;
+		
+		try {
+			ordenDespacho = em.find(OrdenDespacho.class, idOrdenDespacho);
+		} catch (NoResultException e) {
+			System.out.println("### No hay una orden de Despacho con ID: " + idOrdenDespacho);
+			return null;
+		}
+		
+		System.out.println("### Se encontró orden de Despacho con ID: " + idOrdenDespacho);
 		return ordenDespacho.getDTO();
 	}
 
@@ -123,7 +122,6 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 
 	@Override
 	public List<SolicitudArticuloDTO> generarSolicitudArticuloPorDeposito(OrdenDespachoDTO ordenDespachoDTO) {
-		// TODO Auto-generated method stub
 		
 		OrdenDespachoDTO ordenDespachoDTOAux = ordenDespachoDTO;
 		List<SolicitudArticuloDTO> solicitudesGeneradas = new ArrayList<SolicitudArticuloDTO>();
@@ -162,6 +160,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			
 		return solicitudesGeneradas;
 	}
+	
 	
 	public String notificarEntregaDespacho (int idOrdenDespacho){
         System.out.println("***********************");
