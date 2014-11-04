@@ -45,18 +45,20 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
     public AdministradorOrdenesDespachoBean() {}
 
 	@Override
-	public OrdenDespachoDTO altaOrdenDespacho(OrdenDespachoDTO ordenDespachoDTO) {
+	public boolean altaOrdenDespacho(OrdenDespachoDTO ordenDespachoDTO) {
 		
 		//Busco la OD en la BD, si ya existe una con el mismo ID, no la persiste 
+		System.out.println("###### Comienza busqueda de Orden de Despacho");
 		OrdenDespacho ordenBaseDatos;
-		ordenBaseDatos = em.find(OrdenDespacho.class, ordenDespachoDTO.getIdOrdenDespacho());
+//		ordenBaseDatos = em.find(OrdenDespacho.class, ordenDespachoDTO.getIdOrdenDespacho());
+		ordenBaseDatos = this.buscarOrdenDespacho(ordenDespachoDTO.getIdOrdenDespacho());
 		if (ordenBaseDatos != null) {
 			System.out.println("### Ya hay una orden de Despacho con ID: " + ordenDespachoDTO.getIdOrdenDespacho());
-			return null;
+			return false;
 		
 		//Si la OD NO existe en la Base de Datos, PERSISTO
 		} else {
-			System.out.println("### Se da de alta una Orden de Despacho con el ID: " + String.valueOf(ordenDespachoDTO.getIdOrdenDespacho()));
+			System.out.println("###### Comienza Alta de Orden de Despacho con el ID: " + String.valueOf(ordenDespachoDTO.getIdOrdenDespacho()));
 		
 			Portal portal = new Portal();
 			portal.setIdPortal(ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal());
@@ -87,23 +89,27 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 				itemOD.setCantidad(item.getCantidad());
 				itemOD.setEstadoItems(item.getEstadoItems());
 				
-				
 				items.add(itemOD);
 			}
 			ordenDespacho.setItems(items);
 			
-			em.merge(ordenDespacho);
-
-			return ordenDespachoDTO;	
-		
+			try {
+				em.merge(ordenDespacho);
+				
+			} catch (Exception e) {
+				System.out.println("### Falló alta orden de Despacho");
+				e.printStackTrace();
+				return false;
+			}
+			System.out.println("### Se dió de alta orden de Despacho con ID: " + ordenDespachoDTO.getIdOrdenDespacho());
+			return true;	
 		}	
 		
 	}
 
 
 
-	@Override
-	public OrdenDespachoDTO buscarOrdenDespacho(int idOrdenDespacho) {
+	private OrdenDespacho buscarOrdenDespacho(int idOrdenDespacho) {
 		
 		OrdenDespacho ordenDespacho;
 		
@@ -115,7 +121,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 		}
 		
 		System.out.println("### Se encontró orden de Despacho con ID: " + idOrdenDespacho);
-		return ordenDespacho.getDTO();
+		return ordenDespacho;
 	}
 
 
