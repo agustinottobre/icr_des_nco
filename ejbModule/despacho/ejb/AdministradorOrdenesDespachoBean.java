@@ -97,11 +97,11 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 				em.merge(ordenDespacho);
 				
 			} catch (Exception e) {
-				System.out.println("### Falló alta orden de Despacho");
+				System.out.println("### Fallï¿½ alta orden de Despacho");
 				e.printStackTrace();
 				return false;
 			}
-			System.out.println("### Se dió de alta orden de Despacho con ID: " + ordenDespachoDTO.getIdOrdenDespacho());
+			System.out.println("### Se diï¿½ de alta orden de Despacho con ID: " + ordenDespachoDTO.getIdOrdenDespacho());
 			return true;	
 		}	
 		
@@ -120,7 +120,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			return null;
 		}
 		
-		System.out.println("### Se encontró orden de Despacho con ID: " + idOrdenDespacho);
+		System.out.println("### Se encontrï¿½ orden de Despacho con ID: " + idOrdenDespacho);
 		return ordenDespacho;
 	}
 
@@ -141,7 +141,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			
 			solicitudGenerada = new SolicitudArticuloDTO();
 			solicitudGenerada.setEstadoSolicitud("Nueva");
-			solicitudGenerada.setIdDepostio(deposito1);
+			solicitudGenerada.setidDeposito(deposito1);
 			
 			
 			for (ItemOrdenDespachoDTO item2 : ordenDespachoDTOAux.getItems())

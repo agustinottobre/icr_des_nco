@@ -29,7 +29,7 @@ public class SolicitudArticulo {
 	@Column (columnDefinition="nvarchar")
 	private String estadoSolicitud;
 	
-	private int idDepostio;
+	private int idDeposito;
 	
 	@OneToMany (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name = "idSolicitudArticulo")
@@ -51,12 +51,12 @@ public class SolicitudArticulo {
 		this.estadoSolicitud = estadoSolicitud;
 	}
 
-	public int getIdDepostio() {
-		return idDepostio;
+	public int getidDeposito() {
+		return idDeposito;
 	}
 
-	public void setIdDepostio(int idDepostio) {
-		this.idDepostio = idDepostio;
+	public void setidDeposito(int idDeposito) {
+		this.idDeposito = idDeposito;
 	}
 
 	public List<ItemSolicitudArticulo> getItems() {
@@ -71,7 +71,7 @@ public class SolicitudArticulo {
 		SolicitudArticuloDTO solicitudArticuloDTO = new SolicitudArticuloDTO();
 		
 		solicitudArticuloDTO.setEstadoSolicitud(this.getEstadoSolicitud());
-		solicitudArticuloDTO.setIdDepostio(this.getIdDepostio());
+		solicitudArticuloDTO.setidDeposito(this.getidDeposito());
 		solicitudArticuloDTO.setIdSolicitud(this.getIdSolicitud());
 		for (ItemSolicitudArticulo item : this.getItems())
 		{

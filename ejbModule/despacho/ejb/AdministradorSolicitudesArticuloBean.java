@@ -37,7 +37,7 @@ public class AdministradorSolicitudesArticuloBean implements AdministradorSolici
 		// TODO Auto-generated method stub
 		SolicitudArticulo solicitudArticulo = new SolicitudArticulo();
 		solicitudArticulo.setEstadoSolicitud(solicitudArticuloDTO.getEstadoSolicitud());
-		solicitudArticulo.setIdDepostio(solicitudArticuloDTO.getIdDepostio());
+		solicitudArticulo.setidDeposito(solicitudArticuloDTO.getidDeposito());
 		solicitudArticulo.setIdSolicitud(solicitudArticuloDTO.getIdSolicitud());
 		
 		ItemSolicitudArticulo itemSA;
