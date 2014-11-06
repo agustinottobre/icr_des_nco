@@ -176,7 +176,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
         ServidorEstadoEntregaBean port1 = service1.getServidorEstadoEntregaBeanPort();
         System.out.println("LLamada al Web Service de Portal... notificarEntregaDespacho");
         String respuesta = port1.notificarEntregaDespacho(idOrdenDespacho);
-        System.out.println("Server said: " + respuesta);
+        System.out.println("Respuesta Portal: " + respuesta);
 		return respuesta;
 	}
     
