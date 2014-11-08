@@ -84,7 +84,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			ordenDespacho.setOrdenVenta(ordenVenta);
 			
 			ItemOrdenDespacho itemOD;
-			List<ItemOrdenDespacho> items = new ArrayList<ItemOrdenDespacho>();
+			Set<ItemOrdenDespacho> items = new HashSet<ItemOrdenDespacho>();
 			Articulo articulo;
 			for (ItemOrdenDespachoDTO item : ordenDespachoDTO.getItems())
 			{
@@ -163,7 +163,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			solicitudGenerada.setEstadoSolicitud("Nueva");
 			solicitudGenerada.setidDeposito(deposito);
 			solicitudGenerada.setIdOrdenDespacho(ordenDespachoDTO.getIdOrdenDespacho());
-			solicitudGenerada.setItems(new ArrayList<ItemSolicitudArticuloDTO>());
+			solicitudGenerada.setItems(new HashSet<ItemSolicitudArticuloDTO>());
 	
 			ItemSolicitudArticuloDTO itemSolicitud = new ItemSolicitudArticuloDTO();
 			itemSolicitud.setArticulo(item.getArticulo());
@@ -202,7 +202,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	OrdenDespacho od = buscarOrdenDespacho(idOrdenDespacho);
 
 	//Levanto los Items
-	List<ItemOrdenDespacho> ordenes = new ArrayList<ItemOrdenDespacho>();
+	Set<ItemOrdenDespacho> ordenes = new HashSet<ItemOrdenDespacho>();
 	ordenes = od.getItems();
 
 	//Recorro todos los items, cambio el Flag, si alg�n item no est� completo.

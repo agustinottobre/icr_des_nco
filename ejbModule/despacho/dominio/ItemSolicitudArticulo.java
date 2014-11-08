@@ -21,6 +21,11 @@ import dto.ItemSolicitudArticuloDTO;
 @Table(name = "ItemsSolicitudArticulo")
 public class ItemSolicitudArticulo implements Serializable{
 
+	public ItemSolicitudArticulo() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private int idItemSA;
@@ -30,6 +35,8 @@ public class ItemSolicitudArticulo implements Serializable{
 	private Articulo articulo;
 	
 	private int cantidad;
+	
+	private int idSolicitudArticulo;
 
 	public int getIdItemSA() {
 		return idItemSA;
@@ -63,6 +70,14 @@ public class ItemSolicitudArticulo implements Serializable{
 		itemSolicitudArticuloDTO.setIdItemSA(this.getIdItemSA());
 		
 		return itemSolicitudArticuloDTO;
+	}
+
+	public int getIdSolicitudArticulo() {
+		return idSolicitudArticulo;
+	}
+
+	public void setIdSolicitudArticulo(int idSolicitudArticulo) {
+		this.idSolicitudArticulo = idSolicitudArticulo;
 	}	
 	
 }

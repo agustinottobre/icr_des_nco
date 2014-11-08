@@ -1,7 +1,9 @@
 package despacho.ejb;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -47,7 +49,7 @@ public class AdministradorSolicitudesArticuloBean implements AdministradorSolici
 		solicitudArticulo.setOrdenDespacho(ordenDespacho);
 		
 		ItemSolicitudArticulo itemSA;
-		List<ItemSolicitudArticulo> items = new ArrayList<ItemSolicitudArticulo>();
+		Set<ItemSolicitudArticulo> items = new HashSet<ItemSolicitudArticulo>();
 		Articulo articulo;
 		for (ItemSolicitudArticuloDTO item : solicitudArticuloDTO.getItems())
 		{
@@ -58,6 +60,7 @@ public class AdministradorSolicitudesArticuloBean implements AdministradorSolici
 			itemSA = new ItemSolicitudArticulo();
 			itemSA.setArticulo(articulo);
 			itemSA.setCantidad(item.getCantidad());
+			itemSA.setIdSolicitudArticulo(solicitudArticuloDTO.getIdSolicitud());
 			
 			items.add(itemSA);
 		}
