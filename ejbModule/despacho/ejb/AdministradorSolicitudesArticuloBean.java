@@ -143,6 +143,23 @@ public class AdministradorSolicitudesArticuloBean implements AdministradorSolici
 	return solicitudArticulosDTO;
 	}
 
+	public List<SolicitudArticuloDTO> listar(){
+		List<SolicitudArticuloDTO> listaSolicitudArticulosSalida = null;
+		Query q = em.createQuery("Select S from SolicitudArticulo S");
+    	try{
+    		List<SolicitudArticulo> solicitudesArticulos = q.getResultList();
+    		System.out.println("Se encontraron " + solicitudesArticulos.size() + " solicitudes de articulos ");
+    		listaSolicitudArticulosSalida = new ArrayList<SolicitudArticuloDTO>();
+    		for(SolicitudArticulo solicitudArticulo : solicitudesArticulos){
+    			listaSolicitudArticulosSalida.add(solicitudArticulo.getDTO());
+    		}
+    	}catch (Exception e){
+    		System.out.println("No fue posible listar solicitudes de articulos");
+    		e.printStackTrace();
+    		return null;
+    	}
+    	return listaSolicitudArticulosSalida;
+	}
 
 
 }
