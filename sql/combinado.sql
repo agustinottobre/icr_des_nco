@@ -17,7 +17,7 @@ create table ItemsSolicitudArticulo
 (
 	idItemSA int identity(1,1) primary key,
 	idArticulo int not null  references Articulos(idArticulo),
-	idSolicitudArticulo int not null  references SolicitudesArticulo(idSolicitudArticulo),
+	idSolicitudArticulo int not null,
 	cantidad int
 );
 
