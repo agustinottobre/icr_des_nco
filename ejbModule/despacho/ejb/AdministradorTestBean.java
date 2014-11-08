@@ -1,7 +1,9 @@
 package despacho.ejb;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.DependsOn;
 import javax.ejb.EJB;
@@ -53,7 +55,7 @@ public class AdministradorTestBean implements AdministradorTest{
     	solicitudArticuloDTO.setEstadoSolicitud("pendiente");
     	solicitudArticuloDTO.setIdSolicitud(453);
     	solicitudArticuloDTO.setidDeposito(33);
-    	List<ItemSolicitudArticuloDTO> items = new ArrayList<ItemSolicitudArticuloDTO>();
+    	Set<ItemSolicitudArticuloDTO> items = new HashSet<ItemSolicitudArticuloDTO>();
     	ItemSolicitudArticuloDTO itemSolicitudArticuloDTO = new ItemSolicitudArticuloDTO();
     	ArticuloDTO articuloDTO = new ArticuloDTO();
     	articuloDTO.setIdArticulo(655);

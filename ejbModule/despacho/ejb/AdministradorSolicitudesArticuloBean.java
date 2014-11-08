@@ -49,7 +49,7 @@ public class AdministradorSolicitudesArticuloBean implements AdministradorSolici
 		solicitudArticulo.setOrdenDespacho(ordenDespacho);
 		
 		ItemSolicitudArticulo itemSA;
-		List<ItemSolicitudArticulo> items = new ArrayList<ItemSolicitudArticulo>();
+		Set<ItemSolicitudArticulo> items = new HashSet<ItemSolicitudArticulo>();
 		Articulo articulo;
 		for (ItemSolicitudArticuloDTO item : solicitudArticuloDTO.getItems())
 		{

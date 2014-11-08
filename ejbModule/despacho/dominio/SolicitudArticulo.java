@@ -39,7 +39,7 @@ public class SolicitudArticulo {
 	
 	@OneToMany (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name = "idSolicitudArticulo")
-	private List<ItemSolicitudArticulo> items;
+	private Set<ItemSolicitudArticulo> items;
 
 
 	public int getIdSolicitud() {
@@ -66,11 +66,11 @@ public class SolicitudArticulo {
 		this.idDeposito = idDeposito;
 	}
 
-	public List<ItemSolicitudArticulo> getItems() {
+	public Set<ItemSolicitudArticulo> getItems() {
 		return items;
 	}
 
-	public void setItems(List<ItemSolicitudArticulo> items) {
+	public void setItems(Set<ItemSolicitudArticulo> items) {
 		this.items = items;
 	}
 	

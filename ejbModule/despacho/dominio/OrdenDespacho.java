@@ -32,7 +32,7 @@ public class OrdenDespacho implements Serializable{
 	@OneToMany (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name = "idOrdenDespacho")
 //	@OneToMany(mappedBy="ordenDespacho", targetEntity=ItemOrdenDespacho.class, cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-	private List<ItemOrdenDespacho> items;
+	private Set<ItemOrdenDespacho> items;
 
 	public int getIdOrdenDespacho() {
 		return idOrdenDespacho;
@@ -66,11 +66,11 @@ public class OrdenDespacho implements Serializable{
 		this.fechaRecepcion = fechaRecepcion;
 	}
 
-	public List<ItemOrdenDespacho> getItems() {
+	public Set<ItemOrdenDespacho> getItems() {
 		return items;
 	}
 
-	public void setItems(List<ItemOrdenDespacho> items) {
+	public void setItems(Set<ItemOrdenDespacho> items) {
 		this.items = items;
 	}
 	
@@ -84,7 +84,7 @@ public class OrdenDespacho implements Serializable{
 		ordenDespachoDTO.setFechaRecepcion(this.getFechaRecepcion().toString());
 		ordenDespachoDTO.setIdOrdenDespacho(this.getIdOrdenDespacho());
 		ordenDespachoDTO.setOrdenVenta(this.getOrdenVenta().getDTO());
-		List<ItemOrdenDespachoDTO> items = new ArrayList<ItemOrdenDespachoDTO>();
+		Set<ItemOrdenDespachoDTO> items = new HashSet<ItemOrdenDespachoDTO>();
 		ordenDespachoDTO.setItems(items);
 		for (ItemOrdenDespacho item : this.getItems())
 		{
