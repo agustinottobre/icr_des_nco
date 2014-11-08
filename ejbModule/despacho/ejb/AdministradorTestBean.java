@@ -3,6 +3,7 @@ package despacho.ejb;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.DependsOn;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -10,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import despacho.dominio.Portal;
+import despacho.ejb.interfaces.remotas.AdministradorPropiedades;
 import despacho.ejb.interfaces.remotas.AdministradorTest;
 import despacho.ejb.interfaces.remotas.ClienteJmsParaDeposito;
 import despacho.ejb.interfaces.remotas.SimClienteRestParaDeposito;
@@ -24,6 +26,9 @@ public class AdministradorTestBean implements AdministradorTest{
     @PersistenceContext(unitName = "JPADB")
     private EntityManager entityManager;
     
+    @EJB
+    private AdministradorPropiedades administradorPropiedades;
+    
 	@EJB
 	private ClienteJmsParaDeposito clienteJmsParaDeposito;
 	@EJB
@@ -32,6 +37,14 @@ public class AdministradorTestBean implements AdministradorTest{
 	private SimClienteRestParaDeposito simClienteRestParaDeposito;
     
     public String testEJB(){
+		  if(null == administradorPropiedades){
+			  System.out.println("##administradorPropiedades = NULL !!!!");
+			  return "administradorPropiedades = NULL !!!!";
+		  }
+		  System.out.println("##administradorPropiedades NOT NULL !!!!");
+		  System.out.println("##props:" + administradorPropiedades.getPropiedades());
+		  
+
     	return "Test EJB OK !";
     }
     
