@@ -27,6 +27,7 @@ public class OrdenDespacho implements Serializable{
 	
 	@Column (columnDefinition="nvarchar")
 	private String estadoOrden;
+	
 	private Date fechaRecepcion;
 	
 	@OneToMany (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
@@ -92,6 +93,6 @@ public class OrdenDespacho implements Serializable{
 		}
 		
 		return ordenDespachoDTO;
-	}	
+	}
 	
 }

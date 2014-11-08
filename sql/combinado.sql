@@ -37,7 +37,7 @@ create table OrdenesDespacho
 (
 	idOrdenDespacho int not null primary key,
 	idOrdenVenta int not null  references OrdenesVenta(idOrdenVenta),
-	estadoOrden nvarchar(50),
+	estadoOrden   nvarchar(50),
 	fechaRecepcion datetime,
 );
 
