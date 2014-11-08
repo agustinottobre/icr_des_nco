@@ -19,11 +19,13 @@ import despacho.dominio.ItemSolicitudArticulo;
 import despacho.dominio.OrdenDespacho;
 import despacho.dominio.SolicitudArticulo;
 import despacho.ejb.interfaces.remotas.AdministradorSolicitudesArticulo;
+import despacho.ejb.interfaces.remotas.ClienteRestParaLogistica;
 import despacho.rest.bindings.ArticulosRecibidos;
 import despacho.rest.bindings.Item;
 import dto.ArticuloDTO;
 import dto.ItemOrdenDespachoDTO;
 import dto.ItemSolicitudArticuloDTO;
+import dto.OrdenDespachoDTO;
 import dto.SolicitudArticuloDTO;
 
 /**
@@ -36,6 +38,9 @@ public class AdministradorSolicitudesArticuloBean implements
 
 	@EJB
 	private AdministradorOrdenesDespachoBean administradorOrdenesDespachoBean;
+	
+	@EJB
+	private ClienteRestParaLogistica clienteRestLogistica;
 	
 	@PersistenceContext(unitName = "JPADB")
 	private EntityManager em;
@@ -113,6 +118,7 @@ public class AdministradorSolicitudesArticuloBean implements
 		int idSolicitudArticulo = Integer.valueOf(articulosRecibidos
 				.getIdSolicitud());
 		String estado = "Recibido";
+		boolean completa = true; 
 
 		SolicitudArticulo solicitud = this
 				.buscarSolicitudArticulo(idSolicitudArticulo);
@@ -132,9 +138,47 @@ public class AdministradorSolicitudesArticuloBean implements
 			}
 			System.out.println("### Se hizo Update estado Solicitud Articulo con ID: "+ solicitud.getIdSolicitud());
 			OrdenDespacho ordenDespacho = administradorOrdenesDespachoBean.buscarOrdenDespacho(solicitud.getOrdenDespacho().getIdOrdenDespacho());
-			//----------->>>>> 	ACTUALIZAR EL ESTADO DEL ITEM DE LA ORDEN DE DESPACHO
+			//----------->>>>> 	ACTUALIZAR EL ESTADO DEL ITEM DE LA ORDEN DE DESPACHO			
+			for (ItemSolicitudArticulo itemSolicitud : solicitud.getItems()) {
+				for (ItemOrdenDespacho itemOrden : ordenDespacho.getItems()) {
+					if ((itemOrden.getArticulo().getIdArticulo() == itemSolicitud.getArticulo().getIdArticulo()) &&
+							(itemOrden.getCantidad() == itemSolicitud.getCantidad())) {
+					itemOrden.setEstadoItems(estado);
+					try {
+						em.merge(ordenDespacho);
+
+					} catch (Exception e) {
+						System.out.println("### Fallo Update estado Item Orden Despacho");
+						e.printStackTrace();
+						return false;
+						}
+					}
+					
+				}
+			}
 			
 			//------->>>>> SI TODOS LOS ITEMS FUERON RECIBIDOS, ACTUALIZO EL ESTADO EN LA CABECERA DE LA ORDEN 
+			for (ItemOrdenDespacho itemOrden : ordenDespacho.getItems()) {
+				if (itemOrden.getEstadoItems() != estado){
+					completa = false;
+				}
+			}
+			
+			if (completa) {
+				ordenDespacho.setEstadoOrden(estado);
+				try {
+					em.merge(ordenDespacho);
+
+				} catch (Exception e) {
+					System.out.println("### Fallo Update estado Orden Despacho");
+					e.printStackTrace();
+					return false;
+					}
+			
+				System.out.println("### La Orden de Despacho " + ordenDespacho.getIdOrdenDespacho() + " esta completa, se envia mensaje a Logistica");
+				clienteRestLogistica.enviarCambioEstado(ordenDespacho.getIdOrdenDespacho());
+			}
+			
 			return true;
 		}
 
