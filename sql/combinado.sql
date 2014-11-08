@@ -10,6 +10,7 @@ create table Articulos
 create table SolicitudesArticulo
 (
 	idSolicitudArticulo int identity(1,1) primary key,
+	idOrdenDespacho int,
 	estadoSolicitud nvarchar(50),
 	idDeposito int
 );

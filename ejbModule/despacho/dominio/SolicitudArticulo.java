@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,7 +23,7 @@ import dto.SolicitudArticuloDTO;
 public class SolicitudArticulo {
 	
 	@Id
-	//@GeneratedValue (strategy = GenerationType.AUTO)
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	@Column(name = "idSolicitudArticulo")
 	private int idSolicitud;
 	
@@ -30,6 +31,10 @@ public class SolicitudArticulo {
 	private String estadoSolicitud;
 	
 	private int idDeposito;
+	
+	@ManyToOne (fetch=FetchType.EAGER)
+	@JoinColumn (name = "idOrdenDespacho")
+	private OrdenDespacho ordenDespacho;
 	
 	@OneToMany (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name = "idSolicitudArticulo")
@@ -73,12 +78,21 @@ public class SolicitudArticulo {
 		solicitudArticuloDTO.setEstadoSolicitud(this.getEstadoSolicitud());
 		solicitudArticuloDTO.setidDeposito(this.getidDeposito());
 		solicitudArticuloDTO.setIdSolicitud(this.getIdSolicitud());
+		solicitudArticuloDTO.setIdOrdenDespacho(this.getOrdenDespacho().getIdOrdenDespacho());
 		for (ItemSolicitudArticulo item : this.getItems())
 		{
 			solicitudArticuloDTO.getItems().add(item.getDTO());
 		}
 		
 		return solicitudArticuloDTO;
+	}
+
+	public OrdenDespacho getOrdenDespacho() {
+		return ordenDespacho;
+	}
+
+	public void setOrdenDespacho(OrdenDespacho ordenDespacho) {
+		this.ordenDespacho = ordenDespacho;
 	}
 
 }

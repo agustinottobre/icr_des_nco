@@ -25,7 +25,7 @@ public class ItemSolicitudArticulo implements Serializable{
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private int idItemSA;
 	
-	@OneToOne (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToOne (fetch=FetchType.EAGER)
 	@JoinColumn(name = "idArticulo")
 	private Articulo articulo;
 	
