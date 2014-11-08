@@ -1,4 +1,5 @@
-insert into Articulos (idArticulo, descripcion, marca, modelo, idDeposito) values (1, 'Zapatillas', 'Adidas', 'Air', 3);
+insert into Articulos (idArticulo, descripcion, marca, modelo, idDeposito) 
+values (1, 'Zapatillas', 'Adidas', 'Air', 3);
 insert into Articulos (idArticulo, descripcion, marca, modelo, idDeposito) 
 	values	(1351953, 
 			'Aire Acondicionado Split', 

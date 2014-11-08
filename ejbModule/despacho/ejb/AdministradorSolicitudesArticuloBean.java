@@ -15,6 +15,8 @@ import despacho.dominio.ItemSolicitudArticulo;
 import despacho.dominio.OrdenDespacho;
 import despacho.dominio.SolicitudArticulo;
 import despacho.ejb.interfaces.remotas.AdministradorSolicitudesArticulo;
+import despacho.rest.bindings.ArticulosRecibidos;
+import despacho.rest.bindings.Item;
 import dto.ArticuloDTO;
 import dto.ItemOrdenDespachoDTO;
 import dto.ItemSolicitudArticuloDTO;
@@ -77,6 +79,48 @@ public class AdministradorSolicitudesArticuloBean implements AdministradorSolici
 		return solicitud.getDTO();
 	}
     
+	
+	//Voy a recibir el id de la solicitud de articulo, codigos de articulos y cantidades desde los depositos.
+	// Debo modificar el estado de la
+	public boolean registrarRecepcionDeStock(ArticulosRecibidos articulosRecibidos){
+
+	List<Item> item = articulosRecibidos.getItems();
+	ItemSolicitudArticulo itemSA = new ItemSolicitudArticulo();
+	int idSolicitudArticulo = Integer.valueOf(articulosRecibidos.getIdSolicitud());
+	String estado = "Pendiente";
+
+	//Recorro los items y actualizo el estado en la Base de Datos
+	for (Item item2 : item) {
+
+	//Busco el item solicitud de articulo en la BD y la traigo.
+	Query q = em.createQuery("SELECT FROM ItemSolicitudesArticulo sol WHERE sol.idSolicitudArticulo = :id and sol.idArticulo =:ida");
+	q.setParameter("id", idSolicitudArticulo);
+	q.setParameter("ida", item2.getCodigo());
+
+	//Traigo la solicitud, cambio el estado y la mergeo
+	//Si la cantidad es igual a la cantidad enviada, doy por cerrada.
+	itemSA = (ItemSolicitudArticulo) q.getSingleResult();
+
+	if(itemSA.getCantidad() == item2.getCantidad()){
+	//Agregar campo en la BD
+	//itemSA.getEstado("Recibido");
+
+	try{
+	em.merge(itemSA);
+	}catch (Exception e) {
+	System.out.println("### Fallo, revisar");
+	e.printStackTrace();
+	return false;
+	}
+	}
+
+	}
+	//Recorri todos los items y pude verificar el estado
+	return true;
+
+	}
+	
+	
 
 
 }

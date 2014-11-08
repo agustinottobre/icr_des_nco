@@ -97,11 +97,11 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 				em.merge(ordenDespacho);
 				
 			} catch (Exception e) {
-				System.out.println("### Fallï¿½ alta orden de Despacho");
+				System.out.println("### Fallo alta orden de Despacho");
 				e.printStackTrace();
 				return false;
 			}
-			System.out.println("### Se diï¿½ de alta orden de Despacho con ID: " + ordenDespachoDTO.getIdOrdenDespacho());
+			System.out.println("### Se dio de alta orden de Despacho con ID: " + ordenDespachoDTO.getIdOrdenDespacho());
 			return true;	
 		}	
 		
@@ -120,7 +120,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			return null;
 		}
 		
-		System.out.println("### Se encontrï¿½ orden de Despacho con ID: " + idOrdenDespacho);
+		System.out.println("### Se encontro orden de Despacho con ID: " + idOrdenDespacho);
 		return ordenDespacho;
 	}
 
@@ -166,6 +166,74 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			
 		return solicitudesGeneradas;
 	}
+
+
+	
+	 //Recorro todas las ordenes de Despacho con estado "Nueva"
+	public void verificarEstadoOrdenesDeDespacho(){
+
+	List<OrdenDespacho> ordenesDespacho = new ArrayList<OrdenDespacho>();
+	Query q = em.createQuery("SELECT FROM OrdenesDespacho od where od.estadoItems := id");
+	q.setParameter("id", "Nueva");
+	ordenesDespacho = q.getResultList();
+
+	for (OrdenDespacho ordenDespacho : ordenesDespacho) {
+	verificarEstadoOrdenDeDespacho(ordenDespacho.getIdOrdenDespacho());
+	}
+
+	}
+
+
+	//Chequeo que una Orden de Despacho se encuentre completa, para cambiar el estado.
+	private boolean verificarEstadoOrdenDeDespacho(int idOrdenDespacho){
+
+	//Busco Orden de Despacho
+	OrdenDespacho od = buscarOrdenDespacho(idOrdenDespacho);
+
+	//Levanto los Items
+	Set<ItemOrdenDespacho> ordenes = new HashSet<ItemOrdenDespacho>();
+	ordenes = od.getItems();
+
+	//Recorro todos los items, cambio el Flag, si algún item no está completo.
+	boolean flag = true;
+	for (ItemOrdenDespacho itemOrdenDespacho : ordenes) {
+	if(itemOrdenDespacho.getEstadoItems().equals("Pendiente")){
+	flag = false;
+	}
+	}
+
+	if(flag==true){
+	// Si el flag queda en TRUE, quiere decir que la Orden de Despacho tiene todos
+	// los items completos. Cambio el Estado!
+	cambiarEstadoOrdenDeDespacho(idOrdenDespacho);
+	return true;
+	}
+	return false;
+
+	}
+
+
+	//Busco una Orden de Despacho por su ID y cambio el estado de "Nueva" a "Entregada"
+	private void cambiarEstadoOrdenDeDespacho (int idOrdenDespacho){
+
+	OrdenDespacho od = buscarOrdenDespacho(idOrdenDespacho);
+	od.setEstadoOrden("Entregada");
+
+	try{
+	em.merge(od);
+	}catch (Exception e) {
+	System.out.println("### Fallo, no pudo grabar la orden de despacho con el nuevo estado");
+	e.printStackTrace();
+	}
+
+	// IMPORTANTE - Enviará la notificación del cambio de estado de la Orden de Despacho
+	notificarEntregaDespacho(idOrdenDespacho);
+
+	}
+
+
+	
+	
 	
 	
 	public String notificarEntregaDespacho (int idOrdenDespacho){
