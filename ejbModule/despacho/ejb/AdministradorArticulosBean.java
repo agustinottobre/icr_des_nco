@@ -79,7 +79,7 @@ public class AdministradorArticulosBean implements AdministradorArticulos{
 
 	}
 
-	private Articulo BuscarArticulo(int idArticulo) {
+	public Articulo BuscarArticulo(int idArticulo) {
 
 		Articulo articulo;
 		

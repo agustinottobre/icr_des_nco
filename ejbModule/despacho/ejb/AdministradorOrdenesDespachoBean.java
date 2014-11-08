@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -42,16 +43,23 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 
     @PersistenceContext(unitName = "JPADB")
     private EntityManager em;
-
+    
+	@EJB
+	AdministradorSolicitudesArticuloBean administradorSolicitudesArticulo = new AdministradorSolicitudesArticuloBean();
+	
+	@EJB
+	AdministradorArticulosBean administradorArticulosBean = new AdministradorArticulosBean();
+	
     public AdministradorOrdenesDespachoBean() {}
 
-	@Override
+//--------------------------------------------------------------------    
+//-----------------------------------ALTA ORDENES DE DESPACHO	
+    @Override
 	public boolean altaOrdenDespacho(OrdenDespachoDTO ordenDespachoDTO) {
 		
 		//Busco la OD en la BD, si ya existe una con el mismo ID, no la persiste 
 		System.out.println("###### Comienza busqueda de Orden de Despacho");
 		OrdenDespacho ordenBaseDatos;
-//		ordenBaseDatos = em.find(OrdenDespacho.class, ordenDespachoDTO.getIdOrdenDespacho());
 		ordenBaseDatos = this.buscarOrdenDespacho(ordenDespachoDTO.getIdOrdenDespacho());
 		if (ordenBaseDatos != null) {
 			System.out.println("### Ya hay una orden de Despacho con ID: " + ordenDespachoDTO.getIdOrdenDespacho());
@@ -121,50 +129,52 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			return null;
 		}
 		
-		System.out.println("### Se encontro orden de Despacho con ID: " + idOrdenDespacho);
-		return ordenDespacho;
+		if (ordenDespacho == null) {
+			System.out.println("### No hay una orden de Despacho con ID: " + idOrdenDespacho);
+			return null;
+		} else {
+			System.out.println("### Se encontro orden de Despacho con ID: " + idOrdenDespacho);
+			return ordenDespacho;
+		}
+
 	}
 
 
 
+	
+
+
+//--------------------------------------------------------------------  	
+//-----------------------------------PROCESAR ORDENES DE DESPACHO
 	@Override
-	public List<SolicitudArticuloDTO> generarSolicitudArticuloPorDeposito(OrdenDespachoDTO ordenDespachoDTO) {
+	public List<SolicitudArticuloDTO> procesarSolicitudDespacho(OrdenDespachoDTO ordenDespachoDTO) {
 		
-		OrdenDespachoDTO ordenDespachoDTOAux = ordenDespachoDTO;
 		List<SolicitudArticuloDTO> solicitudesGeneradas = new ArrayList<SolicitudArticuloDTO>();
 		
 		SolicitudArticuloDTO solicitudGenerada;
-		int deposito1, deposito2;
-		for (ItemOrdenDespachoDTO item1 : ordenDespachoDTOAux.getItems())
+		int deposito;
+		Articulo articulo;
+		for (ItemOrdenDespachoDTO item : ordenDespachoDTO.getItems())
 		{
-			Boolean procesado = false;
-			deposito1 = item1.getArticulo().getIdDeposito();
+			articulo = administradorArticulosBean.BuscarArticulo(item.getArticulo().getIdArticulo());
+			deposito = articulo.getIdDeposito();
 			
 			solicitudGenerada = new SolicitudArticuloDTO();
 			solicitudGenerada.setEstadoSolicitud("Nueva");
-			solicitudGenerada.setidDeposito(deposito1);
-			
-			
-			for (ItemOrdenDespachoDTO item2 : ordenDespachoDTOAux.getItems())
-			{			
-				deposito2 = item2.getArticulo().getIdDeposito();
-				ItemSolicitudArticuloDTO itemSolicitud;
-				if (deposito1 == deposito2) {
-					procesado = true;
-					itemSolicitud = new ItemSolicitudArticuloDTO();
-					itemSolicitud.setArticulo(item2.getArticulo());
-					itemSolicitud.setCantidad(item2.getCantidad());
-					solicitudGenerada.getItems().add(itemSolicitud);
-					ordenDespachoDTOAux.getItems().remove(item2);	
-				}		
-			}
-			
-			if (procesado) {
-				solicitudesGeneradas.add(solicitudGenerada);
-			}
-			
+			solicitudGenerada.setidDeposito(deposito);
+			solicitudGenerada.setIdOrdenDespacho(ordenDespachoDTO.getIdOrdenDespacho());
+			solicitudGenerada.setItems(new ArrayList<ItemSolicitudArticuloDTO>());
+	
+			ItemSolicitudArticuloDTO itemSolicitud = new ItemSolicitudArticuloDTO();
+			itemSolicitud.setArticulo(item.getArticulo());
+			itemSolicitud.setCantidad(item.getCantidad());
+			solicitudGenerada.getItems().add(itemSolicitud);
+
+			solicitudesGeneradas.add(solicitudGenerada);
+			administradorSolicitudesArticulo.altaSolicitudArticulo(solicitudGenerada);
+
 		}
-			
+		
 		return solicitudesGeneradas;
 	}
 
@@ -231,7 +241,24 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	notificarEntregaDespacho(idOrdenDespacho);
 
 	}
+	
+	//Listar Ordenes de Despacho por Estado
+	public List<OrdenDespachoDTO> listarOrdenesDespacho(String estado){
 
+		List<OrdenDespacho> ordenesDespacho = new ArrayList<OrdenDespacho>();
+		List<OrdenDespachoDTO> ordenesDespachoDTO = new ArrayList<OrdenDespachoDTO>();
+
+		Query q = em.createQuery("SELECT FROM OrdenDespacho od where od.estadoOrden := estado");
+		q.setParameter("estado", estado);
+		ordenesDespacho = q.getResultList();
+
+		//Recorro y conviero a DTO
+		for (OrdenDespacho ordenDespacho : ordenesDespacho) {
+			ordenesDespachoDTO.add(ordenDespacho.getDTO());
+		}
+
+		return ordenesDespachoDTO;
+	}
 
 	public List<OrdenDespachoDTO> listar(){
 		List<OrdenDespachoDTO> listaOrdenesDespachoSalida = null;

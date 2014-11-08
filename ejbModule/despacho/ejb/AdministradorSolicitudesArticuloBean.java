@@ -42,6 +42,10 @@ public class AdministradorSolicitudesArticuloBean implements AdministradorSolici
 		solicitudArticulo.setidDeposito(solicitudArticuloDTO.getidDeposito());
 		solicitudArticulo.setIdSolicitud(solicitudArticuloDTO.getIdSolicitud());
 		
+		OrdenDespacho ordenDespacho = new OrdenDespacho();
+		ordenDespacho.setIdOrdenDespacho(solicitudArticuloDTO.getIdOrdenDespacho());
+		solicitudArticulo.setOrdenDespacho(ordenDespacho);
+		
 		ItemSolicitudArticulo itemSA;
 		List<ItemSolicitudArticulo> items = new ArrayList<ItemSolicitudArticulo>();
 		Articulo articulo;
@@ -66,8 +70,8 @@ public class AdministradorSolicitudesArticuloBean implements AdministradorSolici
 		return solicitudArticuloDTO;
 	}
 
-	@Override
-	public SolicitudArticuloDTO buscarSolicitudArticulo(
+	
+	private SolicitudArticuloDTO buscarSolicitudArticulo(
 			String idSolicitudArticulo) {
 		// TODO Auto-generated method stub
 
@@ -121,6 +125,24 @@ public class AdministradorSolicitudesArticuloBean implements AdministradorSolici
 	}
 	
 	
+	 //Listar Solicitudes de Articulos por Estado
+	public List<SolicitudArticuloDTO> listaSolicitudesArticuloPorEstado(String estado){
+
+	List<SolicitudArticulo> solicitudArticulos = new ArrayList<SolicitudArticulo>();
+	List<SolicitudArticuloDTO> solicitudArticulosDTO = new ArrayList<SolicitudArticuloDTO>();
+
+	Query q = em.createQuery("SELECT FROM SolicitudArticulo sa where sa.estadoSolicitud := estado");
+	q.setParameter("estado", estado);
+	solicitudArticulos = q.getResultList();
+
+	//Recorro y conviero a DTO
+	for (SolicitudArticulo solicitudArticulo : solicitudArticulos) {
+	solicitudArticulosDTO.add(solicitudArticulo.getDTO());
+	}
+
+	return solicitudArticulosDTO;
+	}
+
 
 
 }
