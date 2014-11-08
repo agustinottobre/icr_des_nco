@@ -2,6 +2,7 @@ package despacho.dominio;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -39,6 +40,7 @@ public class SolicitudArticulo {
 	@OneToMany (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name = "idSolicitudArticulo")
 	private List<ItemSolicitudArticulo> items;
+
 
 	public int getIdSolicitud() {
 		return idSolicitud;
@@ -94,5 +96,6 @@ public class SolicitudArticulo {
 	public void setOrdenDespacho(OrdenDespacho ordenDespacho) {
 		this.ordenDespacho = ordenDespacho;
 	}
+
 
 }
