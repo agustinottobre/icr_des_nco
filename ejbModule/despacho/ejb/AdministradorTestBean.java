@@ -31,6 +31,9 @@ public class AdministradorTestBean implements AdministradorTest{
     @EJB
     private AdministradorPropiedades administradorPropiedades;
     
+    @EJB
+    private AdministradorSolicitudesArticuloBean administradorSolicitudesArticuloBean;
+    
 	@EJB
 	private ClienteJmsParaDeposito clienteJmsParaDeposito;
 	@EJB
@@ -64,12 +67,14 @@ public class AdministradorTestBean implements AdministradorTest{
     	itemSolicitudArticuloDTO.setCantidad(5);
     	items.add(itemSolicitudArticuloDTO);
     	solicitudArticuloDTO.setItems(items);
+//    	administradorSolicitudesArticuloBean.altaSolicitudArticulo(solicitudArticuloDTO);
     	clienteJmsParaDeposito.enviarSolicitudesArticulos(solicitudArticuloDTO);
     	return "##TEST testEnviarSolicitudArticuloDepositoClienteJMS OK!";
     }
     
     public String testRecibirOrdenDespachoPorWSDesdeLogistica(){
-    	return simuladorLogisticaClienteJmsParaDespacho.testRecibirOrdenDespachoPorWSDesdeLogistica();
+//    	return simuladorLogisticaClienteJmsParaDespacho.testRecibirOrdenDespachoPorWSDesdeLogistica();
+    	return "no implementado";
     }
     
     public String testRecibirArticulosPorRESTDesdeDeposito(){

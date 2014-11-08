@@ -1,6 +1,8 @@
 package despacho.dominio;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import dto.ItemSolicitudArticuloDTO;
 import dto.OrdenDespachoDTO;
 import dto.SolicitudArticuloDTO;
 
@@ -81,6 +84,8 @@ public class SolicitudArticulo {
 		solicitudArticuloDTO.setidDeposito(this.getidDeposito());
 		solicitudArticuloDTO.setIdSolicitud(this.getIdSolicitud());
 		solicitudArticuloDTO.setIdOrdenDespacho(this.getOrdenDespacho().getIdOrdenDespacho());
+		Set<ItemSolicitudArticuloDTO> items = new HashSet<ItemSolicitudArticuloDTO>();
+		solicitudArticuloDTO.setItems(items);
 		for (ItemSolicitudArticulo item : this.getItems())
 		{
 			solicitudArticuloDTO.getItems().add(item.getDTO());
