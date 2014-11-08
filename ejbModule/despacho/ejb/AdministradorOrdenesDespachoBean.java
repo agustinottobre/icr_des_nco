@@ -28,6 +28,7 @@ import despacho.ejb.interfaces.remotas.AdministradorOrdenesDespacho;
 import dto.ItemOrdenDespachoDTO;
 import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBean;
 import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBeanService;
+import dto.ArticuloDTO;
 import dto.ItemSolicitudArticuloDTO;
 import dto.OrdenDespachoDTO;
 import dto.SolicitudArticuloDTO;
@@ -75,7 +76,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			ordenDespacho.setOrdenVenta(ordenVenta);
 			
 			ItemOrdenDespacho itemOD;
-			Set<ItemOrdenDespacho> items = new HashSet<ItemOrdenDespacho>();
+			List<ItemOrdenDespacho> items = new ArrayList<ItemOrdenDespacho>();
 			Articulo articulo;
 			for (ItemOrdenDespachoDTO item : ordenDespachoDTO.getItems())
 			{
@@ -191,10 +192,10 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	OrdenDespacho od = buscarOrdenDespacho(idOrdenDespacho);
 
 	//Levanto los Items
-	Set<ItemOrdenDespacho> ordenes = new HashSet<ItemOrdenDespacho>();
+	List<ItemOrdenDespacho> ordenes = new ArrayList<ItemOrdenDespacho>();
 	ordenes = od.getItems();
 
-	//Recorro todos los items, cambio el Flag, si algún item no está completo.
+	//Recorro todos los items, cambio el Flag, si algï¿½n item no estï¿½ completo.
 	boolean flag = true;
 	for (ItemOrdenDespacho itemOrdenDespacho : ordenes) {
 	if(itemOrdenDespacho.getEstadoItems().equals("Pendiente")){
@@ -226,13 +227,29 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	e.printStackTrace();
 	}
 
-	// IMPORTANTE - Enviará la notificación del cambio de estado de la Orden de Despacho
+	// IMPORTANTE - Enviarï¿½ la notificaciï¿½n del cambio de estado de la Orden de Despacho
 	notificarEntregaDespacho(idOrdenDespacho);
 
 	}
 
 
-	
+	public List<OrdenDespachoDTO> listar(){
+		List<OrdenDespachoDTO> listaOrdenesDespachoSalida = null;
+		Query q = em.createQuery("Select O from OrdenDespacho O");
+    	try{
+    		List<OrdenDespacho> ordenesDespacho = q.getResultList();
+    		System.out.println("Se encontraron " + ordenesDespacho.size() + " ordenes de despacho ");
+    		listaOrdenesDespachoSalida = new ArrayList<OrdenDespachoDTO>();
+    		for(OrdenDespacho ordenDespacho : ordenesDespacho){
+    			listaOrdenesDespachoSalida.add(ordenDespacho.getDTO());
+    		}
+    	}catch (Exception e){
+    		System.out.println("No fue posible listar Ordenes de despacho");
+    		e.printStackTrace();
+    		return null;
+    	}
+    	return listaOrdenesDespachoSalida;
+	}
 	
 	
 	

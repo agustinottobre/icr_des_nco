@@ -1,7 +1,9 @@
 package despacho.dominio;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +32,7 @@ public class OrdenDespacho implements Serializable{
 	@OneToMany (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name = "idOrdenDespacho")
 //	@OneToMany(mappedBy="ordenDespacho", targetEntity=ItemOrdenDespacho.class, cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-	private Set<ItemOrdenDespacho> items;
+	private List<ItemOrdenDespacho> items;
 
 	public int getIdOrdenDespacho() {
 		return idOrdenDespacho;
@@ -64,11 +66,11 @@ public class OrdenDespacho implements Serializable{
 		this.fechaRecepcion = fechaRecepcion;
 	}
 
-	public Set<ItemOrdenDespacho> getItems() {
+	public List<ItemOrdenDespacho> getItems() {
 		return items;
 	}
 
-	public void setItems(Set<ItemOrdenDespacho> items) {
+	public void setItems(List<ItemOrdenDespacho> items) {
 		this.items = items;
 	}
 	
@@ -82,6 +84,8 @@ public class OrdenDespacho implements Serializable{
 		ordenDespachoDTO.setFechaRecepcion(this.getFechaRecepcion().toString());
 		ordenDespachoDTO.setIdOrdenDespacho(this.getIdOrdenDespacho());
 		ordenDespachoDTO.setOrdenVenta(this.getOrdenVenta().getDTO());
+		List<ItemOrdenDespachoDTO> items = new ArrayList<ItemOrdenDespachoDTO>();
+		ordenDespachoDTO.setItems(items);
 		for (ItemOrdenDespacho item : this.getItems())
 		{
 			ordenDespachoDTO.getItems().add(item.getDTO());

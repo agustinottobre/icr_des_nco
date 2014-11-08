@@ -65,6 +65,7 @@ public class Articulo {
 		
 		articuloDTO.setDescripcion(this.getDescripcion());
 		articuloDTO.setIdArticulo(this.getIdArticulo());
+		articuloDTO.setIdDeposito(this.getIdDeposito());
 //		articuloDTO.setMarca(this.getMarca());
 //		articuloDTO.setModelo(this.getModelo());
 	
