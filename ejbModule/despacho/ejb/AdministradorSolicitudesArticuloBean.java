@@ -5,9 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -29,123 +31,133 @@ import dto.SolicitudArticuloDTO;
  */
 @Stateless
 @LocalBean
-public class AdministradorSolicitudesArticuloBean implements AdministradorSolicitudesArticulo {
+public class AdministradorSolicitudesArticuloBean implements
+		AdministradorSolicitudesArticulo {
 
-    @PersistenceContext(unitName = "JPADB")
-    private EntityManager em;
-    
-    public AdministradorSolicitudesArticuloBean() {}
+	@EJB
+	private AdministradorOrdenesDespachoBean administradorOrdenesDespachoBean;
+	
+	@PersistenceContext(unitName = "JPADB")
+	private EntityManager em;
+
+	public AdministradorSolicitudesArticuloBean() {
+	}
 
 	@Override
-	public SolicitudArticuloDTO altaSolicitudArticulo(SolicitudArticuloDTO solicitudArticuloDTO) {
+	public SolicitudArticuloDTO altaSolicitudArticulo(
+			SolicitudArticuloDTO solicitudArticuloDTO) {
 		// TODO Auto-generated method stub
 		SolicitudArticulo solicitudArticulo = new SolicitudArticulo();
-		solicitudArticulo.setEstadoSolicitud(solicitudArticuloDTO.getEstadoSolicitud());
+		solicitudArticulo.setEstadoSolicitud(solicitudArticuloDTO
+				.getEstadoSolicitud());
 		solicitudArticulo.setidDeposito(solicitudArticuloDTO.getidDeposito());
 		solicitudArticulo.setIdSolicitud(solicitudArticuloDTO.getIdSolicitud());
-		
+
 		OrdenDespacho ordenDespacho = new OrdenDespacho();
-		ordenDespacho.setIdOrdenDespacho(solicitudArticuloDTO.getIdOrdenDespacho());
+		ordenDespacho.setIdOrdenDespacho(solicitudArticuloDTO
+				.getIdOrdenDespacho());
 		solicitudArticulo.setOrdenDespacho(ordenDespacho);
-		
+
 		ItemSolicitudArticulo itemSA;
 		Set<ItemSolicitudArticulo> items = new HashSet<ItemSolicitudArticulo>();
 		Articulo articulo;
-		for (ItemSolicitudArticuloDTO item : solicitudArticuloDTO.getItems())
-		{
-			
+		for (ItemSolicitudArticuloDTO item : solicitudArticuloDTO.getItems()) {
+
 			articulo = new Articulo();
 			articulo.setIdArticulo(item.getArticulo().getIdArticulo());
-			
+
 			itemSA = new ItemSolicitudArticulo();
 			itemSA.setArticulo(articulo);
 			itemSA.setCantidad(item.getCantidad());
 			itemSA.setIdSolicitudArticulo(solicitudArticuloDTO.getIdSolicitud());
-			
+
 			items.add(itemSA);
 		}
 		solicitudArticulo.setItems(items);
-		
+
 		em.persist(solicitudArticulo);
 
-		
-//		FALTA VERIFICAR SI SE HACE BIEN EL ALTA Y DEVOLVER EL DTO EN CADA CASO
 		return solicitudArticuloDTO;
-	}
-
-	
-	private SolicitudArticuloDTO buscarSolicitudArticulo(
-			String idSolicitudArticulo) {
-		// TODO Auto-generated method stub
-
-		Query q = em.createQuery("SELECT FROM SolicitudesArticulo sol WHERE sol.idSolicitudArticulo = :id");
-		q.setParameter("id", idSolicitudArticulo);
-		
-		SolicitudArticulo solicitud = (SolicitudArticulo)q.getSingleResult();
-
-		return solicitud.getDTO();
-	}
-    
-	
-	//Voy a recibir el id de la solicitud de articulo, codigos de articulos y cantidades desde los depositos.
-	// Debo modificar el estado de la
-	public boolean registrarRecepcionDeStock(ArticulosRecibidos articulosRecibidos){
-
-	List<Item> item = articulosRecibidos.getItems();
-	ItemSolicitudArticulo itemSA = new ItemSolicitudArticulo();
-	int idSolicitudArticulo = Integer.valueOf(articulosRecibidos.getIdSolicitud());
-	String estado = "Pendiente";
-
-	//Recorro los items y actualizo el estado en la Base de Datos
-	for (Item item2 : item) {
-
-	//Busco el item solicitud de articulo en la BD y la traigo.
-	Query q = em.createQuery("SELECT FROM ItemSolicitudesArticulo sol WHERE sol.idSolicitudArticulo = :id and sol.idArticulo =:ida");
-	q.setParameter("id", idSolicitudArticulo);
-	q.setParameter("ida", item2.getCodigo());
-
-	//Traigo la solicitud, cambio el estado y la mergeo
-	//Si la cantidad es igual a la cantidad enviada, doy por cerrada.
-	itemSA = (ItemSolicitudArticulo) q.getSingleResult();
-
-	if(itemSA.getCantidad() == item2.getCantidad()){
-	//Agregar campo en la BD
-	//itemSA.getEstado("Recibido");
-
-	try{
-	em.merge(itemSA);
-	}catch (Exception e) {
-	System.out.println("### Fallo, revisar");
-	e.printStackTrace();
-	return false;
-	}
-	}
 
 	}
-	//Recorri todos los items y pude verificar el estado
-	return true;
+
+	private SolicitudArticulo buscarSolicitudArticulo(int idSolicitudArticulo) {
+
+		SolicitudArticulo solicitudArticulo;
+
+		try {
+			solicitudArticulo = em.find(SolicitudArticulo.class,
+					idSolicitudArticulo);
+		} catch (NoResultException e) {
+			System.out.println("### No hay una Solicitud de Articulo con ID: "
+					+ idSolicitudArticulo);
+			return null;
+		}
+
+		if (solicitudArticulo == null) {
+			System.out.println("### No hay una Solicitud de Articulo con ID: "
+					+ idSolicitudArticulo);
+			return null;
+		} else {
+			System.out
+					.println("### Se encontro una Solicitud de Articulo con ID: "
+							+ idSolicitudArticulo);
+			return solicitudArticulo;
+		}
 
 	}
-	
-	
-	 //Listar Solicitudes de Articulos por Estado
-	public List<SolicitudArticuloDTO> listaSolicitudesArticuloPorEstado(String estado){
 
-	List<SolicitudArticulo> solicitudArticulos = new ArrayList<SolicitudArticulo>();
-	List<SolicitudArticuloDTO> solicitudArticulosDTO = new ArrayList<SolicitudArticuloDTO>();
+	@Override
+	public boolean registrarRecepcionDeStock(ArticulosRecibidos articulosRecibidos) {
 
-	Query q = em.createQuery("SELECT FROM SolicitudArticulo sa where sa.estadoSolicitud := estado");
-	q.setParameter("estado", estado);
-	solicitudArticulos = q.getResultList();
+		int idSolicitudArticulo = Integer.valueOf(articulosRecibidos
+				.getIdSolicitud());
+		String estado = "Recibido";
 
-	//Recorro y conviero a DTO
-	for (SolicitudArticulo solicitudArticulo : solicitudArticulos) {
-	solicitudArticulosDTO.add(solicitudArticulo.getDTO());
+		SolicitudArticulo solicitud = this
+				.buscarSolicitudArticulo(idSolicitudArticulo);
+		if (solicitud == null) {
+			System.out
+			.println("###  Se cancela la modificación de la Solicitud");
+			return false;
+		} else {
+			solicitud.setEstadoSolicitud(estado);
+			try {
+				em.merge(solicitud);
+
+			} catch (Exception e) {
+				System.out.println("### Fallo Update estado Solicitud Articulo");
+				e.printStackTrace();
+				return false;
+			}
+			System.out.println("### Se hizo Update estado Solicitud Articulo con ID: "+ solicitud.getIdSolicitud());
+			OrdenDespacho ordenDespacho = administradorOrdenesDespachoBean.buscarOrdenDespacho(solicitud.getOrdenDespacho().getIdOrdenDespacho());
+			//----------->>>>> 	ACTUALIZAR EL ESTADO DEL ITEM DE LA ORDEN DE DESPACHO
+			
+			//------->>>>> SI TODOS LOS ITEMS FUERON RECIBIDOS, ACTUALIZO EL ESTADO EN LA CABECERA DE LA ORDEN 
+			return true;
+		}
+
 	}
 
-	return solicitudArticulosDTO;
+	// Listar Solicitudes de Articulos por Estado
+	public List<SolicitudArticuloDTO> listaSolicitudesArticuloPorEstado(
+			String estado) {
+
+		List<SolicitudArticulo> solicitudArticulos = new ArrayList<SolicitudArticulo>();
+		List<SolicitudArticuloDTO> solicitudArticulosDTO = new ArrayList<SolicitudArticuloDTO>();
+
+		Query q = em
+				.createQuery("SELECT FROM SolicitudArticulo sa where sa.estadoSolicitud := estado");
+		q.setParameter("estado", estado);
+		solicitudArticulos = q.getResultList();
+
+		// Recorro y conviero a DTO
+		for (SolicitudArticulo solicitudArticulo : solicitudArticulos) {
+			solicitudArticulosDTO.add(solicitudArticulo.getDTO());
+		}
+
+		return solicitudArticulosDTO;
 	}
-
-
 
 }

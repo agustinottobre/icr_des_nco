@@ -89,9 +89,12 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			for (ItemOrdenDespachoDTO item : ordenDespachoDTO.getItems())
 			{
 				
-				articulo = new Articulo();
-				articulo.setIdArticulo(item.getArticulo().getIdArticulo());
-				
+				articulo = administradorArticulosBean.BuscarArticulo(item.getArticulo().getIdArticulo());
+				if (articulo == null) {
+					System.out.println("### Fallo alta orden de Despacho - No existe el articulo: " + item.getArticulo().getIdArticulo());
+					return false;
+				}
+		
 				itemOD = new ItemOrdenDespacho();
 				itemOD.setIdOrdenDespacho(item.getIdOrdenDespacho());
 				itemOD.setArticulo(articulo);
@@ -118,7 +121,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 
 
 
-	private OrdenDespacho buscarOrdenDespacho(int idOrdenDespacho) {
+	public OrdenDespacho buscarOrdenDespacho(int idOrdenDespacho) {
 		
 		OrdenDespacho ordenDespacho;
 		
