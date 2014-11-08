@@ -20,9 +20,7 @@ public class ArticuloDAO {
 	@PersistenceContext(unitName = "JPADB")
 	private EntityManager em;
 	
-    /**
-     * Default constructor. 
-     */
+
     public ArticuloDAO() {
         // TODO Auto-generated constructor stub
     }
