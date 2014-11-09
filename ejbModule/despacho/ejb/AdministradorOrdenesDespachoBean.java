@@ -173,7 +173,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			itemSolicitud.setCantidad(item.getCantidad());
 			solicitudGenerada.getItems().add(itemSolicitud);
 
-			administradorSolicitudesArticulo.altaSolicitudArticulo(solicitudGenerada);
+			solicitudGenerada = administradorSolicitudesArticulo.altaSolicitudArticulo(solicitudGenerada);
 			solicitudesGeneradas.add(solicitudGenerada);
 			
 

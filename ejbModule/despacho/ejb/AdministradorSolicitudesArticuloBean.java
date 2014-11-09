@@ -81,8 +81,9 @@ public class AdministradorSolicitudesArticuloBean implements
 		solicitudArticulo.setItems(items);
 
 		em.persist(solicitudArticulo);
+		em.flush();
 
-		return solicitudArticuloDTO;
+		return solicitudArticulo.getDTO();
 
 	}
 
