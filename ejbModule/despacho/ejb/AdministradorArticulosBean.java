@@ -85,7 +85,7 @@ public class AdministradorArticulosBean implements AdministradorArticulos{
 		
 		try {
 			articulo = em.find(Articulo.class, idArticulo);
-		} catch (NoResultException e) {
+		} catch (Exception e) {
 			System.out.println("### No hay un articulo con ID: " + idArticulo);
 			return null;
 		}

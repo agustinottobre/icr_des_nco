@@ -1,5 +1,7 @@
 package despacho.ejb;
 
+import java.util.Map;
+
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 
@@ -15,8 +17,7 @@ public class AdministradorUsuariosBean implements AdministradorUsuarios {
     /**
      * Default constructor. 
      */
-    public AdministradorUsuariosBean() {
-        // TODO Auto-generated constructor stub
-    }
+    public AdministradorUsuariosBean() {}
+    
 
 }
