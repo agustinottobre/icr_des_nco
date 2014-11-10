@@ -90,7 +90,9 @@ public class AdministradorArticulosBean implements AdministradorArticulos{
 			return null;
 		}
 		
-		System.out.println("### Se encontro articulo con ID: " + idArticulo);
+		if (articulo != null) {
+			System.out.println("### Se encontro articulo con ID: " + idArticulo);
+		}
 		return articulo;
 	}
 
