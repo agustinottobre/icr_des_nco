@@ -81,8 +81,9 @@ public class AdministradorSolicitudesArticuloBean implements
 		solicitudArticulo.setItems(items);
 
 		em.persist(solicitudArticulo);
+		em.flush();
 
-		return solicitudArticuloDTO;
+		return solicitudArticulo.getDTO();
 
 	}
 
@@ -124,7 +125,7 @@ public class AdministradorSolicitudesArticuloBean implements
 				.buscarSolicitudArticulo(idSolicitudArticulo);
 		if (solicitud == null) {
 			System.out
-			.println("###  Se cancela la modificación de la Solicitud");
+			.println("###  Se cancela la modificaciï¿½n de la Solicitud");
 			return false;
 		} else {
 			solicitud.setEstadoSolicitud(estado);
