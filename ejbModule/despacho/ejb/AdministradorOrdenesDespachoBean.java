@@ -184,67 +184,67 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 
 
 	
-	 //Recorro todas las ordenes de Despacho con estado "Nueva"
-	public void verificarEstadoOrdenesDeDespacho(){
-
-	List<OrdenDespacho> ordenesDespacho = new ArrayList<OrdenDespacho>();
-	Query q = em.createQuery("SELECT FROM OrdenesDespacho od where od.estadoItems := id");
-	q.setParameter("id", "Nueva");
-	ordenesDespacho = q.getResultList();
-
-	for (OrdenDespacho ordenDespacho : ordenesDespacho) {
-	verificarEstadoOrdenDeDespacho(ordenDespacho.getIdOrdenDespacho());
-	}
-
-	}
-
-
-	//Chequeo que una Orden de Despacho se encuentre completa, para cambiar el estado.
-	private boolean verificarEstadoOrdenDeDespacho(int idOrdenDespacho){
-
-	//Busco Orden de Despacho
-	OrdenDespacho od = buscarOrdenDespacho(idOrdenDespacho);
-
-	//Levanto los Items
-	Set<ItemOrdenDespacho> ordenes = new HashSet<ItemOrdenDespacho>();
-	ordenes = od.getItems();
-
-	//Recorro todos los items, cambio el Flag, si alg�n item no est� completo.
-	boolean flag = true;
-	for (ItemOrdenDespacho itemOrdenDespacho : ordenes) {
-	if(itemOrdenDespacho.getEstadoItems().equals("Pendiente")){
-	flag = false;
-	}
-	}
-
-	if(flag==true){
-	// Si el flag queda en TRUE, quiere decir que la Orden de Despacho tiene todos
-	// los items completos. Cambio el Estado!
-	cambiarEstadoOrdenDeDespacho(idOrdenDespacho);
-	return true;
-	}
-	return false;
-
-	}
+//	 //Recorro todas las ordenes de Despacho con estado "Nueva"
+//	public void verificarEstadoOrdenesDeDespacho(){
+//
+//	List<OrdenDespacho> ordenesDespacho = new ArrayList<OrdenDespacho>();
+//	Query q = em.createQuery("SELECT FROM OrdenesDespacho od where od.estadoItems := id");
+//	q.setParameter("id", "Nueva");
+//	ordenesDespacho = q.getResultList();
+//
+//	for (OrdenDespacho ordenDespacho : ordenesDespacho) {
+//	verificarEstadoOrdenDeDespacho(ordenDespacho.getIdOrdenDespacho());
+//	}
+//
+//	}
 
 
-	//Busco una Orden de Despacho por su ID y cambio el estado de "Nueva" a "Entregada"
-	private void cambiarEstadoOrdenDeDespacho (int idOrdenDespacho){
+//	//Chequeo que una Orden de Despacho se encuentre completa, para cambiar el estado.
+//	private boolean verificarEstadoOrdenDeDespacho(int idOrdenDespacho){
+//
+//	//Busco Orden de Despacho
+//	OrdenDespacho od = buscarOrdenDespacho(idOrdenDespacho);
+//
+//	//Levanto los Items
+//	Set<ItemOrdenDespacho> ordenes = new HashSet<ItemOrdenDespacho>();
+//	ordenes = od.getItems();
+//
+//	//Recorro todos los items, cambio el Flag, si alg�n item no est� completo.
+//	boolean flag = true;
+//	for (ItemOrdenDespacho itemOrdenDespacho : ordenes) {
+//	if(itemOrdenDespacho.getEstadoItems().equals("Pendiente")){
+//	flag = false;
+//	}
+//	}
+//
+//	if(flag==true){
+//	// Si el flag queda en TRUE, quiere decir que la Orden de Despacho tiene todos
+//	// los items completos. Cambio el Estado!
+//	cambiarEstadoOrdenDeDespacho(idOrdenDespacho);
+//	return true;
+//	}
+//	return false;
+//
+//	}
 
-	OrdenDespacho od = buscarOrdenDespacho(idOrdenDespacho);
-	od.setEstadoOrden("Entregada");
 
-	try{
-	em.merge(od);
-	}catch (Exception e) {
-	System.out.println("### Fallo, no pudo grabar la orden de despacho con el nuevo estado");
-	e.printStackTrace();
-	}
-
-	// IMPORTANTE - Enviar� la notificaci�n del cambio de estado de la Orden de Despacho
-	notificarEntregaDespacho(idOrdenDespacho);
-
-	}
+//	//Busco una Orden de Despacho por su ID y cambio el estado de "Nueva" a "Entregada"
+//	private void cambiarEstadoOrdenDeDespacho (int idOrdenDespacho){
+//
+//	OrdenDespacho od = buscarOrdenDespacho(idOrdenDespacho);
+//	od.setEstadoOrden("Entregada");
+//
+//	try{
+//	em.merge(od);
+//	}catch (Exception e) {
+//	System.out.println("### Fallo, no pudo grabar la orden de despacho con el nuevo estado");
+//	e.printStackTrace();
+//	}
+//
+//	// IMPORTANTE - Enviar� la notificaci�n del cambio de estado de la Orden de Despacho
+//	notificarEntregaDespacho(idOrdenDespacho);
+//
+//	}
 	
 	//Listar Ordenes de Despacho por Estado
 	public List<OrdenDespachoDTO> listarOrdenesDespacho(String estado){
@@ -282,7 +282,6 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
     	return listaOrdenesDespachoSalida;
 	}
 
-	
 	
 	public String notificarEntregaDespacho (int idOrdenDespacho){
         System.out.println("***********************");
