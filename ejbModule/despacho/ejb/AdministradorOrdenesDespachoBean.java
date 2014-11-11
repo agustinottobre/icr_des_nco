@@ -1,5 +1,7 @@
 package despacho.ejb;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +28,7 @@ import despacho.dominio.OrdenDespacho;
 import despacho.dominio.OrdenVenta;
 import despacho.dominio.Portal;
 import despacho.ejb.interfaces.remotas.AdministradorOrdenesDespacho;
+import despacho.ejb.interfaces.remotas.AdministradorPropiedades;
 import dto.ItemOrdenDespachoDTO;
 import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBean;
 import despacho.ws.servicios.consumidos.ServidorEstadoEntregaBeanService;
@@ -49,6 +52,11 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	
 	@EJB
 	AdministradorArticulosBean administradorArticulosBean = new AdministradorArticulosBean();
+	
+	@EJB
+	private AdministradorPropiedades administradorPropiedades;
+	
+	private String WS_URL;
 	
     public AdministradorOrdenesDespachoBean() {}
 
@@ -283,15 +291,45 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	}
 
 	
-	public String notificarEntregaDespacho (int idOrdenDespacho){
-        System.out.println("***********************");
+	public String notificarEntregaDespacho (OrdenDespachoDTO ordenDespachoDTO){
+		
+		System.out.println("***********************");
         System.out.println("Creando Cliente Web Service para Portal...");
-        ServidorEstadoEntregaBeanService service1 = new ServidorEstadoEntregaBeanService();
+        ServidorEstadoEntregaBeanService service1;
+        String respuesta = null;
+		try {
+			
+			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 1) {
+				WS_URL = (String)administradorPropiedades.get("portal1-url");
+				System.out.println("##URL Portal " + WS_URL);
+			}
+			
+			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 7) {
+				WS_URL = (String)administradorPropiedades.get("portal2-url");
+				System.out.println("##URL Portal " + WS_URL);
+			}
+
+			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 9) {
+				WS_URL = (String)administradorPropiedades.get("portal3-url");
+				System.out.println("##URL Portal " + WS_URL);
+			}
+			
+			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 8) {
+				WS_URL = (String)administradorPropiedades.get("portal4-url");
+				System.out.println("##URL Portal " + WS_URL);
+			}
+			
+			service1 = new ServidorEstadoEntregaBeanService(new URL(WS_URL));
+
         System.out.println("Creando Web Service...");
         ServidorEstadoEntregaBean port1 = service1.getServidorEstadoEntregaBeanPort();
         System.out.println("LLamada al Web Service de Portal... notificarEntregaDespacho");
-        String respuesta = port1.notificarEntregaDespacho(idOrdenDespacho);
+        respuesta = port1.notificarEntregaDespacho(ordenDespachoDTO.getIdOrdenDespacho());
         System.out.println("Respuesta Portal: " + respuesta);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return respuesta;
 	}
     

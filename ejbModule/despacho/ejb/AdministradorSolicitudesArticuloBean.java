@@ -177,8 +177,8 @@ public class AdministradorSolicitudesArticuloBean implements
 					}
 			
 				System.out.println("### La Orden de Despacho " + ordenDespacho.getIdOrdenDespacho() + " esta completa, se envia mensaje a Logistica");
-				clienteRestLogistica.enviarCambioEstado(ordenDespacho.getIdOrdenDespacho());
-				administradorOrdenesDespachoBean.notificarEntregaDespacho(ordenDespacho.getIdOrdenDespacho());
+				clienteRestLogistica.enviarCambioEstado(ordenDespacho.getDTO());
+				administradorOrdenesDespachoBean.notificarEntregaDespacho(ordenDespacho.getDTO());
 				
 			}
 			
