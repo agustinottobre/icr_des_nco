@@ -30,6 +30,8 @@ public class OrdenDespacho implements Serializable{
 	
 	private Date fechaRecepcion;
 	
+	private int idLogistica; 
+	
 	@OneToMany (cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name = "idOrdenDespacho")
 //	@OneToMany(mappedBy="ordenDespacho", targetEntity=ItemOrdenDespacho.class, cascade = CascadeType.ALL, fetch=FetchType.EAGER)
@@ -93,6 +95,14 @@ public class OrdenDespacho implements Serializable{
 		}
 		
 		return ordenDespachoDTO;
+	}
+
+	public int getIdLogistica() {
+		return idLogistica;
+	}
+
+	public void setIdLogistica(int idLogistica) {
+		this.idLogistica = idLogistica;
 	}
 	
 }
