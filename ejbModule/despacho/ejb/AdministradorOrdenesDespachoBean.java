@@ -90,7 +90,7 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 			ordenDespacho.setEstadoOrden("Nueva");
 			ordenDespacho.setFechaRecepcion(new Date());
 			ordenDespacho.setOrdenVenta(ordenVenta);
-			
+			ordenDespacho.setIdLogistica(ordenDespachoDTO.getIdLogistica());
 			ItemOrdenDespacho itemOD;
 			Set<ItemOrdenDespacho> items = new HashSet<ItemOrdenDespacho>();
 			Articulo articulo;
@@ -291,46 +291,52 @@ public class AdministradorOrdenesDespachoBean implements AdministradorOrdenesDes
 	}
 
 	
-	public String notificarEntregaDespacho (OrdenDespachoDTO ordenDespachoDTO){
+//	public String notificarEntregaDespacho (OrdenDespachoDTO ordenDespachoDTO){
 		
-		System.out.println("***********************");
-        System.out.println("Creando Cliente Web Service para Portal...");
-        ServidorEstadoEntregaBeanService service1;
-        String respuesta = null;
-		try {
-			
-			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 1) {
-				WS_URL = (String)administradorPropiedades.get("portal1-url");
-				System.out.println("##URL Portal " + WS_URL);
-			}
-			
-			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 7) {
-				WS_URL = (String)administradorPropiedades.get("portal2-url");
-				System.out.println("##URL Portal " + WS_URL);
-			}
-
-			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 9) {
-				WS_URL = (String)administradorPropiedades.get("portal3-url");
-				System.out.println("##URL Portal " + WS_URL);
-			}
-			
-			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 8) {
-				WS_URL = (String)administradorPropiedades.get("portal4-url");
-				System.out.println("##URL Portal " + WS_URL);
-			}
-			
-			service1 = new ServidorEstadoEntregaBeanService(new URL(WS_URL));
-
-        System.out.println("Creando Web Service...");
-        ServidorEstadoEntregaBean port1 = service1.getServidorEstadoEntregaBeanPort();
-        System.out.println("LLamada al Web Service de Portal... notificarEntregaDespacho");
-        respuesta = port1.notificarEntregaDespacho(ordenDespachoDTO.getIdOrdenDespacho());
-        System.out.println("Respuesta Portal: " + respuesta);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return respuesta;
-	}
+//		System.out.println("***********************");
+//        System.out.println("Creando Cliente Web Service para Portal...");
+//        ServidorEstadoEntregaBeanService service1;
+//        String respuesta = null;
+//		try {
+//			
+////			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 1) {
+//			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == Integer.parseInt((String)administradorPropiedades.get("portal-ws-id1"))) {
+//				WS_URL = (String)administradorPropiedades.get("portal-ws-host1") + (String)administradorPropiedades.get("portal-ws-path1");
+//			}else
+//			
+////			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 7) {
+//			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == Integer.parseInt((String)administradorPropiedades.get("portal-ws-id2"))) {
+//				WS_URL = (String)administradorPropiedades.get("portal-ws-host2") + (String)administradorPropiedades.get("portal-ws-path2");
+//			}else
+//
+////			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 9) {
+//			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == Integer.parseInt((String)administradorPropiedades.get("portal-ws-id3"))) {
+//				WS_URL = (String)administradorPropiedades.get("portal-ws-host3") + (String)administradorPropiedades.get("portal-ws-path3");
+//			}else
+//			
+////			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == 8) {
+//			if (ordenDespachoDTO.getOrdenVenta().getPortal().getIdPortal() == Integer.parseInt((String)administradorPropiedades.get("portal-ws-id4"))) {
+//				WS_URL = (String)administradorPropiedades.get("portal-ws-host4") + (String)administradorPropiedades.get("portal-ws-path4");
+//			}
+//			
+//			System.out.println("##URL Portal " + WS_URL);
+//			if(null == WS_URL){
+//				System.out.println("##Portal DESCONOCIDO!!!!!!!!!!!!! ");
+//				return null;
+//			}
+//			
+//			service1 = new ServidorEstadoEntregaBeanService(new URL(WS_URL));
+//
+//        System.out.println("Creando Web Service...");
+//        ServidorEstadoEntregaBean port1 = service1.getServidorEstadoEntregaBeanPort();
+//        System.out.println("LLamada al Web Service de Portal... notificarEntregaDespacho");
+//        respuesta = port1.notificarEntregaDespacho(ordenDespachoDTO.getIdOrdenDespacho());
+//        System.out.println("Respuesta Portal: " + respuesta);
+//		} catch (MalformedURLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return respuesta;
+//	}
     
 }

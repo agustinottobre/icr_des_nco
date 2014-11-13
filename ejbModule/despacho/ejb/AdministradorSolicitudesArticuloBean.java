@@ -5,8 +5,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.Asynchronous;
+import javax.ejb.ConcurrencyManagement;
+import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.Lock;
+import javax.ejb.LockType;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -20,6 +25,7 @@ import despacho.dominio.OrdenDespacho;
 import despacho.dominio.SolicitudArticulo;
 import despacho.ejb.interfaces.remotas.AdministradorSolicitudesArticulo;
 import despacho.ejb.interfaces.remotas.ClienteRestParaLogistica;
+import despacho.ejb.interfaces.remotas.AsyncEnviarSolicitudesArticulos;
 import despacho.rest.bindings.ArticulosRecibidos;
 import despacho.rest.bindings.Item;
 import dto.ArticuloDTO;
@@ -37,10 +43,13 @@ public class AdministradorSolicitudesArticuloBean implements
 		AdministradorSolicitudesArticulo {
 
 	@EJB
-	private AdministradorOrdenesDespachoBean administradorOrdenesDespachoBean;
+	private AdministradorOrdenesDespachoBean administradorOrdenesDespachoBean;	
+
+	@EJB
+	private AsyncNotificarLogisticaBean asyncNotificarLogisticaBean;
 	
 	@EJB
-	private ClienteRestParaLogistica clienteRestLogistica;
+	private AsyncNotificarPortalBean asyncNotificarPortalBean;
 	
 	@PersistenceContext(unitName = "JPADB")
 	private EntityManager em;
@@ -177,9 +186,9 @@ public class AdministradorSolicitudesArticuloBean implements
 					}
 			
 				System.out.println("### La Orden de Despacho " + ordenDespacho.getIdOrdenDespacho() + " esta completa, se envia mensaje a Logistica");
-				clienteRestLogistica.enviarCambioEstado(ordenDespacho.getDTO());
-				administradorOrdenesDespachoBean.notificarEntregaDespacho(ordenDespacho.getDTO());
-				
+				asyncNotificarLogisticaBean.notificarLogistica(ordenDespacho.getDTO());
+				asyncNotificarPortalBean.notificarPortal(ordenDespacho.getDTO());
+				System.out.println("### Se retorna para responder servicio Rest");
 			}
 			
 			return true;
@@ -224,6 +233,5 @@ public class AdministradorSolicitudesArticuloBean implements
     	}
     	return listaSolicitudArticulosSalida;
 	}
-
 
 }

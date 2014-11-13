@@ -9,7 +9,11 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.ConcurrencyManagement;
+import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.LocalBean;
+import javax.ejb.Lock;
+import javax.ejb.LockType;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.Stateless;
@@ -23,6 +27,7 @@ import despacho.ejb.interfaces.remotas.AdministradorPropiedades;
 import dto.ArticuloDTO;
 
 @Singleton
+@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Startup
 public class AdministradorPropiedadesBean implements AdministradorPropiedades{
 	
@@ -30,10 +35,12 @@ public class AdministradorPropiedadesBean implements AdministradorPropiedades{
 	
 	public AdministradorPropiedadesBean() {}
 
+	@Lock(LockType.READ)
 	public Properties getPropiedades() {
 		return propiedades;
 	}
 	
+	@Lock(LockType.READ)
 	@Override
 	public Object get(String key) {
 		Object propiedad = propiedades.get(key); 
@@ -42,11 +49,13 @@ public class AdministradorPropiedadesBean implements AdministradorPropiedades{
 	}
 	
 	@Override
+	@Lock(LockType.WRITE)
 	public void put(String key, Object value) {
 		System.out.println("##propiedades.put " + key + ": " + value);
 		propiedades.put(key, value);
 	}
 	
+	@Lock(LockType.READ)
 	@PostConstruct
 	public void defaults(){
 		Properties propiedadesDefault = this.getDefaultsFromFile();
@@ -57,6 +66,7 @@ public class AdministradorPropiedadesBean implements AdministradorPropiedades{
 		System.out.println("##AdministradorPropiedadesBean iniciado con defaults!");
 	}
 	
+	@Lock(LockType.READ)
 	public Properties getDefaultsFromFile(){
 	    Properties propiedadesDefault = new Properties();
 	    InputStream input;

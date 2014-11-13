@@ -58,7 +58,7 @@ create table HistorialOrdenesDespacho
 	evento nvarchar(100)
 );
 insert into Articulos (idArticulo, descripcion, idDeposito) values (1, 'Zapatillas', 
-3);
+11);
 insert into Articulos (idArticulo, descripcion, idDeposito) 
 	values	(1351953, 
 			'Aire Acondicionado Split', 

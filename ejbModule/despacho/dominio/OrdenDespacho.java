@@ -87,6 +87,7 @@ public class OrdenDespacho implements Serializable{
 		ordenDespachoDTO.setFechaRecepcion(this.getFechaRecepcion().toString());
 		ordenDespachoDTO.setIdOrdenDespacho(this.getIdOrdenDespacho());
 		ordenDespachoDTO.setOrdenVenta(this.getOrdenVenta().getDTO());
+		ordenDespachoDTO.setIdLogistica(this.getIdLogistica());
 		Set<ItemOrdenDespachoDTO> items = new HashSet<ItemOrdenDespachoDTO>();
 		ordenDespachoDTO.setItems(items);
 		for (ItemOrdenDespacho item : this.getItems())
