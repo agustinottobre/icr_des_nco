@@ -13,6 +13,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
+import javax.xml.ws.BindingProvider;
 
 import despacho.dominio.OrdenDespacho;
 import despacho.ejb.interfaces.remotas.AdministradorPropiedades;
@@ -84,6 +85,14 @@ public class AsyncNotificarPortalBean implements AsyncNotificarPortal {
 
 	        System.out.println("Creando Web Service...");
 	        ServidorEstadoEntregaBean port1 = service1.getServidorEstadoEntregaBeanPort();
+	        
+//	        BindingProvider bindingProvider = (BindingProvider) port1;
+//	        bindingProvider.getRequestContext().put(
+//	              BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+////	              "http://foo:8086/HelloWhatever");
+////	        	  WS_URL);
+//	              "http://25.13.74.32:8080/ServidorEstadoEntregaBeanPort");
+	        
 	        System.out.println("LLamada al Web Service de Portal... notificarEntregaDespacho");
 	        respuesta = port1.notificarEntregaDespacho(ordenDespachoDTO.getIdOrdenDespacho());
 	        System.out.println("Respuesta Portal: " + respuesta);
