@@ -86,15 +86,17 @@ public class AsyncNotificarPortalBean implements AsyncNotificarPortal {
 	        System.out.println("Creando Web Service...");
 	        ServidorEstadoEntregaBean port1 = service1.getServidorEstadoEntregaBeanPort();
 	        
-//	        BindingProvider bindingProvider = (BindingProvider) port1;
-//	        bindingProvider.getRequestContext().put(
-//	              BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-////	              "http://foo:8086/HelloWhatever");
-////	        	  WS_URL);
+	        BindingProvider bindingProvider = (BindingProvider) port1;
+	        bindingProvider.getRequestContext().put(
+	              BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+//	              "http://foo:8086/HelloWhatever");
+//	        	  WS_URL);
+//	              /tpoPortalEJB/ServidorEstadoEntregaBean?wsdl
 //	              "http://25.13.74.32:8080/ServidorEstadoEntregaBeanPort");
+	        "http://172.16.163.62:8080/tpoPortalEJB/ServidorEstadoEntregaBean");
 	        
 	        System.out.println("LLamada al Web Service de Portal... notificarEntregaDespacho");
-	        respuesta = port1.notificarEntregaDespacho(ordenDespachoDTO.getIdOrdenDespacho());
+	        respuesta = port1.notificarEntregaDespacho(ordenDespachoDTO.getOrdenVenta().getIdOrdenVenta());
 	        System.out.println("Respuesta Portal: " + respuesta);
 			} catch (MalformedURLException e) {
 				System.out.println("##notificarPortal - MalformedURLException");
